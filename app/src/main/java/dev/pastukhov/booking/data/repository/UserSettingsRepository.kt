@@ -1,6 +1,8 @@
 package dev.pastukhov.booking.data.repository
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -47,6 +49,16 @@ class UserSettingsRepository @Inject constructor(
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.LANGUAGE] = language.code
         }
+        applyLanguage(language)
+    }
+
+    private fun applyLanguage(language: AppLanguage) {
+        val locale = when (language) {
+            AppLanguage.ENGLISH -> "en"
+            AppLanguage.SPANISH -> "es"
+        }
+        val appLocale = LocaleListCompat.forLanguageTags(locale)
+        AppCompatDelegate.setApplicationLocales(appLocale)
     }
 
     suspend fun setTheme(theme: AppTheme) {
