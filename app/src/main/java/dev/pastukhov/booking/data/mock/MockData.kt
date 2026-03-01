@@ -33,7 +33,10 @@ object MockData {
             rating = 4.8f,
             reviewCount = 256,
             phone = "+52 55 1234 5678",
-            workingHours = "Lun-Sáb: 9:00 - 20:00"
+            workingHours = "Lun-Sáb: 9:00 - 20:00",
+            latitude = 19.4326,
+            longitude = -99.1332,
+            priceRange = "$$"
         ),
         ProviderDto(
             id = "provider_002",
@@ -46,7 +49,10 @@ object MockData {
             rating = 4.9f,
             reviewCount = 189,
             phone = "+52 55 2345 6789",
-            workingHours = "Lun-Vie: 8:00 - 19:00"
+            workingHours = "Lun-Vie: 8:00 - 19:00",
+            latitude = 19.4284,
+            longitude = -99.1276,
+            priceRange = "$$$"
         ),
         ProviderDto(
             id = "provider_003",
@@ -59,7 +65,10 @@ object MockData {
             rating = 4.7f,
             reviewCount = 142,
             phone = "+52 33 3456 7890",
-            workingHours = "Mar-Dom: 10:00 - 21:00"
+            workingHours = "Mar-Dom: 10:00 - 21:00",
+            latitude = 19.4370,
+            longitude = -99.1419,
+            priceRange = "$"
         ),
         ProviderDto(
             id = "provider_004",
@@ -72,7 +81,10 @@ object MockData {
             rating = 4.9f,
             reviewCount = 98,
             phone = "+52 81 4567 8901",
-            workingHours = "Diario: 9:00 - 22:00"
+            workingHours = "Diario: 9:00 - 22:00",
+            latitude = 19.4200,
+            longitude = -99.1500,
+            priceRange = "$$$"
         ),
         ProviderDto(
             id = "provider_005",
@@ -85,7 +97,90 @@ object MockData {
             rating = 4.6f,
             reviewCount = 312,
             phone = "+52 55 5678 9012",
-            workingHours = "Lun-Dom: 6:00 - 23:00"
+            workingHours = "Lun-Dom: 6:00 - 23:00",
+            latitude = 19.4400,
+            longitude = -99.1200,
+            priceRange = "$$"
+        ),
+        ProviderDto(
+            id = "provider_006",
+            name = "Salón Elegancia",
+            description = "Salón de belleza premium con servicios exclusivos.",
+            category = "SALON",
+            imageUrl = "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400",
+            address = "Calle Elegante 111",
+            city = "Ciudad de México",
+            rating = 4.7f,
+            reviewCount = 178,
+            phone = "+52 55 1111 2222",
+            workingHours = "Lun-Sáb: 10:00 - 19:00",
+            latitude = 19.4150,
+            longitude = -99.1400,
+            priceRange = "$$$"
+        ),
+        ProviderDto(
+            id = "provider_007",
+            name = "Barbería El Clásico",
+            description = "Barbería tradicional con más de 20 años de experiencia.",
+            category = "BARBER",
+            imageUrl = "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400",
+            address = "Av. Reforma 222",
+            city = "Ciudad de México",
+            rating = 4.8f,
+            reviewCount = 203,
+            phone = "+52 55 2222 3333",
+            workingHours = "Lun-Dom: 9:00 - 20:00",
+            latitude = 19.4450,
+            longitude = -99.1150,
+            priceRange = "$$"
+        ),
+        ProviderDto(
+            id = "provider_008",
+            name = "Centro de Belleza Luxury",
+            description = "Tratamientos de belleza de alta gama.",
+            category = "BEAUTY",
+            imageUrl = "https://images.unsplash.com/photo-1519415387722-a1c3bbef716c?w=400",
+            address = "Plaza Luxury 333",
+            city = "Ciudad de México",
+            rating = 4.9f,
+            reviewCount = 145,
+            phone = "+52 55 3333 4444",
+            workingHours = "Mar-Sáb: 11:00 - 21:00",
+            latitude = 19.4100,
+            longitude = -99.1600,
+            priceRange = "$$$$"
+        ),
+        ProviderDto(
+            id = "provider_009",
+            name = "Spa Zen",
+            description = "Experiencia de relajación total con terapias orientales.",
+            category = "SPA",
+            imageUrl = "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400",
+            address = "Calle Zen 444",
+            city = "Ciudad de México",
+            rating = 4.8f,
+            reviewCount = 167,
+            phone = "+52 55 4444 5555",
+            workingHours = "Diario: 10:00 - 22:00",
+            latitude = 19.4500,
+            longitude = -99.1100,
+            priceRange = "$$$"
+        ),
+        ProviderDto(
+            id = "provider_010",
+            name = "Clínica Estética Moderna",
+            description = "Tratamientos estéticos con tecnología avanzada.",
+            category = "CLINIC",
+            imageUrl = "https://images.unsplash.com/photo-1629909615957-be38b9e8e4c4?w=400",
+            address = "Av. Moderna 555",
+            city = "Ciudad de México",
+            rating = 4.7f,
+            reviewCount = 134,
+            phone = "+52 55 5555 6666",
+            workingHours = "Lun-Vie: 9:00 - 18:00",
+            latitude = 19.4250,
+            longitude = -99.1450,
+            priceRange = "$$$$"
         )
     )
 

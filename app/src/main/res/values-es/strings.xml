@@ -15,12 +15,21 @@
 
     <!-- Home Screen -->
     <string name="search_placeholder">Buscar servicios, salones, profesionales…</string>
+    <string name="search_hint">Buscar servicios…</string>
     <string name="category_all">Todos</string>
     <string name="category_salon">Salón</string>
     <string name="category_barber">Barbería</string>
     <string name="category_clinic">Clínica</string>
     <string name="category_spa">Spa</string>
     <string name="category_beauty">Belleza</string>
+    <string name="filter_all">Todos</string>
+    <string name="filter_salon">Salón</string>
+    <string name="filter_barber">Barbería</string>
+    <string name="filter_spa">Spa</string>
+    <string name="filter_clinic">Clínica</string>
+    <string name="view_list">Vista de Lista</string>
+    <string name="view_map">Vista de Mapa</string>
+    <string name="empty_search">No se encontraron resultados</string>
     <string name="no_providers_found">No se encontraron proveedores</string>
     <string name="reviews">reseñas</string>
 

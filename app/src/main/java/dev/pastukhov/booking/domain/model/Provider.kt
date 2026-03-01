@@ -14,7 +14,10 @@ data class Provider(
     val rating: Float,
     val reviewCount: Int,
     val phone: String,
-    val workingHours: String
+    val workingHours: String,
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
+    val priceRange: String = "$$"
 )
 
 /**

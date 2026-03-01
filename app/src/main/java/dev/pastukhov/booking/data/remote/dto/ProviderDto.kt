@@ -18,5 +18,8 @@ data class ProviderDto(
     @JsonProperty("rating") val rating: Float,
     @JsonProperty("reviewCount") val reviewCount: Int,
     @JsonProperty("phone") val phone: String,
-    @JsonProperty("workingHours") val workingHours: String
+    @JsonProperty("workingHours") val workingHours: String,
+    @JsonProperty("latitude") val latitude: Double = 0.0,
+    @JsonProperty("longitude") val longitude: Double = 0.0,
+    @JsonProperty("priceRange") val priceRange: String = "$$"
 )

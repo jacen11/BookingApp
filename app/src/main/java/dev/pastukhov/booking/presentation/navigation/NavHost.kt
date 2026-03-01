@@ -14,6 +14,7 @@ import androidx.navigation.navArgument
 import dev.pastukhov.booking.presentation.ui.screens.HomeScreen
 import dev.pastukhov.booking.presentation.ui.screens.LoginScreen
 import dev.pastukhov.booking.presentation.ui.screens.ProviderDetailScreen
+import dev.pastukhov.booking.presentation.ui.screens.search.SearchScreen
 
 /**
  * Main Navigation Host for the app.
@@ -73,7 +74,11 @@ fun BookingNavHost(
 
             // Search Screen
             composable(route = "search") {
-                // TODO: Create SearchScreen
+                SearchScreen(
+                    onProviderClick = { providerId ->
+                        navController.navigate(Screen.ServiceDetail.createRoute(providerId))
+                    }
+                )
             }
 
             // Bookings Screen

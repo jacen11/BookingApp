@@ -62,7 +62,10 @@ fun ProviderDto.toDomain(): Provider = Provider(
     rating = rating,
     reviewCount = reviewCount,
     phone = phone,
-    workingHours = workingHours
+    workingHours = workingHours,
+    latitude = latitude,
+    longitude = longitude,
+    priceRange = priceRange
 )
 
 fun ProviderEntity.toDomain(): Provider = Provider(
@@ -76,7 +79,10 @@ fun ProviderEntity.toDomain(): Provider = Provider(
     rating = rating,
     reviewCount = reviewCount,
     phone = phone,
-    workingHours = workingHours
+    workingHours = workingHours,
+    latitude = 0.0,
+    longitude = 0.0,
+    priceRange = "$$"
 )
 
 fun Provider.toEntity(): ProviderEntity = ProviderEntity(
