@@ -1,0 +1,56 @@
+<resources>
+    <!-- App name -->
+    <string name="app_name">Reservas</string>
+
+    <!-- Navigation -->
+    <string name="home">Inicio</string>
+    <string name="profile">Perfil</string>
+    <string name="bookings">Mis Reservas</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="logout">Cerrar Sesión</string>
+
+    <!-- Home Screen -->
+    <string name="search_placeholder">Buscar servicios, salones, profesionales…</string>
+    <string name="category_all">Todos</string>
+    <string name="category_salon">Salón</string>
+    <string name="category_barber">Barbería</string>
+    <string name="category_clinic">Clínica</string>
+    <string name="category_spa">Spa</string>
+    <string name="category_beauty">Belleza</string>
+    <string name="no_providers_found">No se encontraron proveedores</string>
+    <string name="reviews">reseñas</string>
+
+    <!-- Booking -->
+    <string name="book_now">Reservar Ahora</string>
+    <string name="select_date">Seleccionar Fecha</string>
+    <string name="select_time">Seleccionar Hora</string>
+    <string name="confirm_booking">Confirmar Reserva</string>
+    <string name="booking_confirmed">¡Reserva Confirmada!</string>
+    <string name="booking_details">Detalles de la Reserva</string>
+    <string name="service">Servicio</string>
+    <string name="price">Precio</string>
+    <string name="duration">Duración</string>
+    <string name="minutes">min</string>
+
+    <!-- Profile -->
+    <string name="edit_profile">Editar Perfil</string>
+    <string name="name">Nombre</string>
+    <string name="email">Correo Electrónico</string>
+    <string name="phone">Teléfono</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+
+    <!-- Common -->
+    <string name="loading">Cargando…</string>
+    <string name="retry">Reintentar</string>
+    <string name="error">Error</string>
+    <string name="ok">Aceptar</string>
+    <string name="no_results">Sin resultados</string>
+    <string name="unknown_error">Ocurrió un error desconocido</string>
+
+    <!-- Errors -->
+    <string name="error_network">Error de red. Por favor verifica tu conexión.</string>
+    <string name="error_server">Error del servidor. Por favor intenta más tarde.</string>
+    <string name="error_not_found">No encontrado</string>
+    <string name="error_unauthorized">Por favor inicia sesión para continuar</string>
+</resources>

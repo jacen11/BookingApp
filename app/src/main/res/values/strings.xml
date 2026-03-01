@@ -1,3 +1,56 @@
 <resources>
+    <!-- App name -->
     <string name="app_name">Booking App</string>
+
+    <!-- Navigation -->
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="bookings">My Bookings</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+
+    <!-- Home Screen -->
+    <string name="search_placeholder">Search services, salons, professionals…</string>
+    <string name="category_all">All</string>
+    <string name="category_salon">Salon</string>
+    <string name="category_barber">Barber</string>
+    <string name="category_clinic">Clinic</string>
+    <string name="category_spa">Spa</string>
+    <string name="category_beauty">Beauty</string>
+    <string name="no_providers_found">No providers found</string>
+    <string name="reviews">reviews</string>
+
+    <!-- Booking -->
+    <string name="book_now">Book Now</string>
+    <string name="select_date">Select Date</string>
+    <string name="select_time">Select Time</string>
+    <string name="confirm_booking">Confirm Booking</string>
+    <string name="booking_confirmed">Booking Confirmed!</string>
+    <string name="booking_details">Booking Details</string>
+    <string name="service">Service</string>
+    <string name="price">Price</string>
+    <string name="duration">Duration</string>
+    <string name="minutes">min</string>
+
+    <!-- Profile -->
+    <string name="edit_profile">Edit Profile</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Common -->
+    <string name="loading">Loading…</string>
+    <string name="retry">Retry</string>
+    <string name="error">Error</string>
+    <string name="ok">OK</string>
+    <string name="no_results">No results</string>
+    <string name="unknown_error">An unknown error occurred</string>
+
+    <!-- Errors -->
+    <string name="error_network">Network error. Please check your connection.</string>
+    <string name="error_server">Server error. Please try again later.</string>
+    <string name="error_not_found">Not found</string>
+    <string name="error_unauthorized">Please log in to continue</string>
 </resources>
