@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
+    implementation("androidx.appcompat:appcompat:1.6.1")
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
@@ -91,6 +92,9 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.core)
+
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Jackson - JSON
     implementation(libs.jackson.kotlin)

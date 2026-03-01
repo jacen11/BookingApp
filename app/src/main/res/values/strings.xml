@@ -10,6 +10,7 @@
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="bookings">My Bookings</string>
+    <string name="my_bookings">My Bookings</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
 
@@ -47,6 +48,18 @@
 
     <!-- Profile -->
     <string name="edit_profile">Edit Profile</string>
+    <string name="profile_title">Profile</string>
+    <string name="profile_my_data">My Data</string>
+    <string name="profile_favorites">Favorites</string>
+    <string name="profile_payment">Payment Methods</string>
+    <string name="profile_addresses">Addresses</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="phone">Phone</string>

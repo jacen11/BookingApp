@@ -14,6 +14,7 @@ import androidx.navigation.navArgument
 import dev.pastukhov.booking.presentation.ui.screens.HomeScreen
 import dev.pastukhov.booking.presentation.ui.screens.LoginScreen
 import dev.pastukhov.booking.presentation.ui.screens.ProviderDetailScreen
+import dev.pastukhov.booking.presentation.ui.screens.profile.ProfileScreen
 import dev.pastukhov.booking.presentation.ui.screens.search.SearchScreen
 
 /**
@@ -88,7 +89,16 @@ fun BookingNavHost(
 
             // Profile Screen
             composable(route = Screen.Profile.route) {
-                // TODO: Create ProfileScreen
+                ProfileScreen(
+                    onLogout = {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    },
+                    onNavigateToBookings = {
+                        navController.navigate(Screen.MyBookings.route)
+                    }
+                )
             }
 
             // Provider Detail Screen (Service Detail)

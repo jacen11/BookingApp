@@ -10,17 +10,27 @@
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="bookings">My Bookings</string>
+    <string name="my_bookings">My Bookings</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
 
     <!-- Home Screen -->
     <string name="search_placeholder">Search services, salons, professionals…</string>
+    <string name="search_hint">Search services…</string>
     <string name="category_all">All</string>
     <string name="category_salon">Salon</string>
     <string name="category_barber">Barber</string>
     <string name="category_clinic">Clinic</string>
     <string name="category_spa">Spa</string>
     <string name="category_beauty">Beauty</string>
+    <string name="filter_all">All</string>
+    <string name="filter_salon">Salon</string>
+    <string name="filter_barber">Barber</string>
+    <string name="filter_spa">Spa</string>
+    <string name="filter_clinic">Clinic</string>
+    <string name="view_list">List View</string>
+    <string name="view_map">Map View</string>
+    <string name="empty_search">No results found</string>
     <string name="no_providers_found">No providers found</string>
     <string name="reviews">reviews</string>
 
@@ -38,6 +48,18 @@
 
     <!-- Profile -->
     <string name="edit_profile">Edit Profile</string>
+    <string name="profile_title">Profile</string>
+    <string name="profile_my_data">My Data</string>
+    <string name="profile_favorites">Favorites</string>
+    <string name="profile_payment">Payment Methods</string>
+    <string name="profile_addresses">Addresses</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="phone">Phone</string>

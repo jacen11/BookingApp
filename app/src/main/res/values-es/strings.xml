@@ -10,6 +10,7 @@
     <string name="home">Inicio</string>
     <string name="profile">Perfil</string>
     <string name="bookings">Mis Citas</string>
+    <string name="my_bookings">Mis Citas</string>
     <string name="login">Iniciar Sesión</string>
     <string name="logout">Cerrar Sesión</string>
 
@@ -47,6 +48,18 @@
 
     <!-- Profile -->
     <string name="edit_profile">Editar Perfil</string>
+    <string name="profile_title">Perfil</string>
+    <string name="profile_my_data">Mis Datos</string>
+    <string name="profile_favorites">Favoritos</string>
+    <string name="profile_payment">Métodos de Pago</string>
+    <string name="profile_addresses">Direcciones</string>
+    <string name="settings_title">Configuración</string>
+    <string name="settings_language">Idioma</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_notifications">Notificaciones</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Oscuro</string>
+    <string name="theme_system">Sistema</string>
     <string name="name">Nombre</string>
     <string name="email">Correo Electrónico</string>
     <string name="phone">Teléfono</string>
