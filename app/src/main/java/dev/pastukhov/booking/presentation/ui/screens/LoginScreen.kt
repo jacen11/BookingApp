@@ -142,9 +142,15 @@ fun LoginScreen(
     }
 }
 
-@Preview
+/**
+ * Preview version of LoginScreen.
+ */
+@Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen(onLoginSuccess = {})
+    MaterialTheme {
+        LoginScreen(
+            onLoginSuccess = {}
+        )
+    }
 }
-
