@@ -1,5 +1,14 @@
 package dev.pastukhov.booking.presentation.navigation
 
+import androidx.annotation.StringRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.ui.graphics.vector.ImageVector
+import dev.pastukhov.booking.R
+
 /**
  * Sealed class representing all navigation routes in the app.
  */
@@ -49,10 +58,11 @@ sealed class Screen(val route: String) {
  */
 enum class BottomNavItem(
     val route: String,
-    val title: String,
-    val icon: String
+    @StringRes val titleResId: Int,
+    val icon: ImageVector
 ) {
-    HOME("home", "Inicio", "home"),
-    BOOKINGS("profile/bookings", "Citas", "calendar"),
-    PROFILE("profile", "Perfil", "person")
+    HOME("home", R.string.nav_home, Icons.Default.Home),
+    SEARCH("search", R.string.nav_search, Icons.Default.Search),
+    BOOKINGS("bookings", R.string.nav_bookings, Icons.Default.CalendarToday),
+    PROFILE("profile", R.string.nav_profile, Icons.Default.Person)
 }
