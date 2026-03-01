@@ -15,12 +15,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.AppLanguage
 import dev.pastukhov.booking.domain.model.AppTheme
+import dev.pastukhov.booking.domain.model.User
 
 /**
  * Profile screen with user info and settings.
@@ -34,6 +36,36 @@ fun ProfileScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    ProfileScreenContent(
+        user = uiState.user,
+        language = uiState.language,
+        theme = uiState.theme,
+        notificationsEnabled = uiState.notificationsEnabled,
+        onLanguageChange = viewModel::setLanguage,
+        onThemeChange = viewModel::setTheme,
+        onNotificationsToggle = viewModel::setNotifications,
+        onLogout = {
+            viewModel.logout()
+            onLogout()
+        },
+        onNavigateToBookings = onNavigateToBookings,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun ProfileScreenContent(
+    user: User?,
+    language: AppLanguage,
+    theme: AppTheme,
+    notificationsEnabled: Boolean,
+    onLanguageChange: (AppLanguage) -> Unit,
+    onThemeChange: (AppTheme) -> Unit,
+    onNotificationsToggle: (Boolean) -> Unit,
+    onLogout: () -> Unit,
+    onNavigateToBookings: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -41,7 +73,7 @@ fun ProfileScreen(
     ) {
         // Header
         ProfileHeader(
-            user = uiState.user,
+            user = user,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -70,34 +102,31 @@ fun ProfileScreen(
             onClick = {}
         )
 
-        Divider(modifier = Modifier.padding(vertical = 16.dp))
+        HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 
         // Settings Section
         SectionTitle(stringResource(R.string.settings_title))
         
         LanguageSetting(
-            currentLanguage = uiState.language,
-            onLanguageChange = viewModel::setLanguage
+            currentLanguage = language,
+            onLanguageChange = onLanguageChange
         )
         
         ThemeSetting(
-            currentTheme = uiState.theme,
-            onThemeChange = viewModel::setTheme
+            currentTheme = theme,
+            onThemeChange = onThemeChange
         )
         
         NotificationsSetting(
-            enabled = uiState.notificationsEnabled,
-            onToggle = viewModel::setNotifications
+            enabled = notificationsEnabled,
+            onToggle = onNotificationsToggle
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         // Logout Button
         Button(
-            onClick = {
-                viewModel.logout()
-                onLogout()
-            },
+            onClick = onLogout,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -300,4 +329,44 @@ private fun NotificationsSetting(
             )
         }
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileScreenContentPreview() {
+    MaterialTheme {
+        ProfileScreenContent(
+            user = User(
+                id = "1",
+                email = "demo@booking.app",
+                name = "Juan Pérez",
+                phone = "+52 123 456 7890",
+                avatarUrl = "https://i.pravatar.cc/150?u=user_001"
+            ),
+            language = AppLanguage.ENGLISH,
+            theme = AppTheme.SYSTEM,
+            notificationsEnabled = true,
+            onLanguageChange = {},
+            onThemeChange = {},
+            onNotificationsToggle = {},
+            onLogout = {},
+            onNavigateToBookings = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileHeaderPreview() {
+    MaterialTheme {
+        ProfileHeader(
+            user = User(
+                id = "1",
+                email = "demo@booking.app",
+                name = "Juan Pérez",
+                phone = "+52 123 456 7890",
+                avatarUrl = "https://i.pravatar.cc/150?u=user_001"
+            )
+        )
+    }
 }
