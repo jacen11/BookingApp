@@ -7,8 +7,8 @@ import dev.pastukhov.booking.data.mapper.toEntity
 import dev.pastukhov.booking.data.mock.MockData
 import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.domain.model.BookingStatus
-import dev.pastukhov.booking.domain.model.PaymentMethod
-import dev.pastukhov.booking.presentation.ui.screens.booking.PaymentUiState
+import dev.pastukhov.booking.presentation.model.PaymentEvent
+import dev.pastukhov.booking.presentation.model.PaymentUiState
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.UUID
@@ -21,18 +21,35 @@ import javax.inject.Inject
 @HiltViewModel
 class PaymentViewModel @Inject constructor(
     private val bookingDao: BookingDao
-) : BaseViewModel<PaymentUiState, Any>() {
+) : BaseViewModel<PaymentUiState, PaymentEvent>() {
 
     override fun initialState(): PaymentUiState = PaymentUiState()
 
-    override fun handleEvent(event: Any) {
-        TODO("Not yet implemented")
+    override fun handleEvent(event: PaymentEvent) {
+        when (event) {
+            is PaymentEvent.InitializePayment -> initializePayment(
+                event.providerId,
+                event.serviceId,
+                event.date,
+                event.time
+            )
+            is PaymentEvent.SetConfirmationData -> setConfirmationData(
+                event.notes,
+                event.phone
+            )
+            is PaymentEvent.SelectPaymentMethod -> selectPaymentMethod(event.method)
+            is PaymentEvent.UpdateCardNumber -> updateCardNumber(event.number)
+            is PaymentEvent.UpdateCardExpiry -> updateCardExpiry(event.expiry)
+            is PaymentEvent.UpdateCardCvv -> updateCardCvv(event.cvv)
+            is PaymentEvent.CompleteBooking -> { /* Handled by screen */ }
+            is PaymentEvent.ClearError -> clearError()
+        }
     }
 
     /**
      * Initialize payment with booking data.
      */
-    fun initializePayment(providerId: String, serviceId: String, date: LocalDate, time: LocalTime) {
+    private fun initializePayment(providerId: String, serviceId: String, date: LocalDate, time: LocalTime) {
         val provider = MockData.mockProviders.find { it.id == providerId }
         val service = MockData.getServicesForProvider(providerId).find { it.id == serviceId }
 
@@ -49,7 +66,7 @@ class PaymentViewModel @Inject constructor(
     /**
      * Set confirmation data from previous screen.
      */
-    fun setConfirmationData(notes: String, phone: String) {
+    private fun setConfirmationData(notes: String, phone: String) {
         updateState {
             copy(
                 notes = notes,
@@ -61,14 +78,14 @@ class PaymentViewModel @Inject constructor(
     /**
      * Select payment method.
      */
-    fun selectPaymentMethod(method: PaymentMethod) {
+    private fun selectPaymentMethod(method: dev.pastukhov.booking.domain.model.PaymentMethod) {
         updateState { copy(selectedPaymentMethod = method) }
     }
 
     /**
      * Update card details.
      */
-    fun updateCardNumber(number: String) {
+    private fun updateCardNumber(number: String) {
         val filtered = number.filter { it.isDigit() }.take(16)
         updateState {
             copy(
@@ -78,7 +95,7 @@ class PaymentViewModel @Inject constructor(
         }
     }
 
-    fun updateCardExpiry(expiry: String) {
+    private fun updateCardExpiry(expiry: String) {
         val filtered = expiry.filter { it.isDigit() }.take(4)
         updateState {
             copy(
@@ -88,7 +105,7 @@ class PaymentViewModel @Inject constructor(
         }
     }
 
-    fun updateCardCvv(cvv: String) {
+    private fun updateCardCvv(cvv: String) {
         val filtered = cvv.filter { it.isDigit() }.take(3)
         updateState {
             copy(
@@ -129,9 +146,9 @@ class PaymentViewModel @Inject constructor(
                 totalPrice = service.price,
                 notes = currentState.notes.ifBlank { null },
                 paymentMethod = currentState.selectedPaymentMethod,
-                cardNumber = if (currentState.selectedPaymentMethod == PaymentMethod.CARD)
+                cardNumber = if (currentState.selectedPaymentMethod == dev.pastukhov.booking.domain.model.PaymentMethod.CARD)
                     currentState.cardNumber else null,
-                cardExpiry = if (currentState.selectedPaymentMethod == PaymentMethod.CARD)
+                cardExpiry = if (currentState.selectedPaymentMethod == dev.pastukhov.booking.domain.model.PaymentMethod.CARD)
                     currentState.cardExpiry else null,
                 isPaid = true
             )
@@ -152,7 +169,7 @@ class PaymentViewModel @Inject constructor(
     /**
      * Clear error message.
      */
-    fun clearError() {
+    private fun clearError() {
         updateState { copy(error = null) }
     }
 }

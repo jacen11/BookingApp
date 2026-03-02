@@ -29,6 +29,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.PaymentMethod
 import dev.pastukhov.booking.domain.model.Service
+import dev.pastukhov.booking.presentation.model.PaymentEvent
+import dev.pastukhov.booking.presentation.model.PaymentUiState
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.CardDetailsSection
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.PaymentMethodsSection
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.SecurityNotice
@@ -51,10 +53,18 @@ fun PaymentScreen(
     PaymentContent(
         uiState = uiState,
         onBack = onBack,
-        onSelectPaymentMethod = { viewModel.selectPaymentMethod(it) },
-        onCardNumberChange = { viewModel.updateCardNumber(it) },
-        onCardExpiryChange = { viewModel.updateCardExpiry(it) },
-        onCardCvvChange = { viewModel.updateCardCvv(it) },
+        onSelectPaymentMethod = { method ->
+            viewModel.handleEvent(PaymentEvent.SelectPaymentMethod(method))
+        },
+        onCardNumberChange = { number ->
+            viewModel.handleEvent(PaymentEvent.UpdateCardNumber(number))
+        },
+        onCardExpiryChange = { expiry ->
+            viewModel.handleEvent(PaymentEvent.UpdateCardExpiry(expiry))
+        },
+        onCardCvvChange = { cvv ->
+            viewModel.handleEvent(PaymentEvent.UpdateCardCvv(cvv))
+        },
         onPay = {
             viewModel.completeBooking { onComplete() }
         }

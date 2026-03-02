@@ -58,7 +58,7 @@ import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.AppLanguage
 import dev.pastukhov.booking.domain.model.AppTheme
 import dev.pastukhov.booking.domain.model.User
-import dev.pastukhov.booking.presentation.viewmodel.ProfileEvent
+import dev.pastukhov.booking.presentation.model.ProfileEvent
 import dev.pastukhov.booking.presentation.viewmodel.ProfileViewModel
 
 /**
@@ -71,7 +71,7 @@ fun ProfileScreen(
     onNavigateToBookings: () -> Unit = {},
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.state.collectAsState()
 
     ProfileScreenContent(
         user = uiState.user,

@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import dev.pastukhov.booking.presentation.model.PaymentEvent
 import dev.pastukhov.booking.presentation.ui.screens.ProviderDetailScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingConfirmationScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingConfirmationViewModel
@@ -235,13 +236,14 @@ fun BookingNavHost(
                 val time = backStackEntry.arguments?.getString("time") ?: return@composable
 
                 val viewModel: PaymentViewModel = hiltViewModel()
-                viewModel.initializePayment(
-                    providerId = providerId,
-                    serviceId = serviceId,
-                    date = java.time.LocalDate.parse(date),
-                    time = java.time.LocalTime.parse(time)
+                viewModel.handleEvent(
+                    PaymentEvent.InitializePayment(
+                        providerId = providerId,
+                        serviceId = serviceId,
+                        date = java.time.LocalDate.parse(date),
+                        time = java.time.LocalTime.parse(time)
+                    )
                 )
-
                 PaymentScreen(
                     onBack = { navController.popBackStack() },
                     onComplete = {
