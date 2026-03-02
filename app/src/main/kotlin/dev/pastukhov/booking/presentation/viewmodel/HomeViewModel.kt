@@ -6,11 +6,7 @@ import dev.pastukhov.booking.domain.model.Provider
 import dev.pastukhov.booking.domain.model.ProviderCategory
 import dev.pastukhov.booking.domain.usecase.GetProvidersUseCase
 import dev.pastukhov.booking.domain.usecase.RefreshProvidersUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,37 +22,53 @@ data class HomeUiState(
 )
 
 /**
+ * Events for Home screen.
+ */
+sealed class HomeEvent {
+    data object LoadProviders : HomeEvent()
+    data class Search(val query: String) : HomeEvent()
+    data class FilterByCategory(val category: ProviderCategory?) : HomeEvent()
+    data object Refresh : HomeEvent()
+}
+
+/**
  * ViewModel for Home Screen.
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getProvidersUseCase: GetProvidersUseCase,
     private val refreshProvidersUseCase: RefreshProvidersUseCase
-) : BaseViewModel<HomeUiState, Unit>() {
-
-    private val _uiState = MutableStateFlow(HomeUiState())
-    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+) : BaseViewModel<HomeUiState, HomeEvent>() {
 
     init {
-        loadProviders()
+        handleEvent(HomeEvent.LoadProviders)
+    }
+
+    override fun handleEvent(event: HomeEvent) {
+        when (event) {
+            is HomeEvent.LoadProviders -> loadProviders()
+            is HomeEvent.Search -> search(event.query)
+            is HomeEvent.FilterByCategory -> filterByCategory(event.category)
+            is HomeEvent.Refresh -> refresh()
+        }
     }
 
     /**
      * Load providers from repository.
      */
-    fun loadProviders() {
+    private fun loadProviders() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            updateState { copy(isLoading = true, error = null) }
 
             getProvidersUseCase()
                 .catch { e ->
-                    _uiState.update {
-                        it.copy(isLoading = false, error = e.message)
+                    updateState {
+                        copy(isLoading = false, error = e.message)
                     }
                 }
                 .collect { providers ->
-                    _uiState.update {
-                        it.copy(
+                    updateState {
+                        copy(
                             providers = providers,
                             isLoading = false,
                             error = null
@@ -69,9 +81,9 @@ class HomeViewModel @Inject constructor(
     /**
      * Filter providers by category.
      */
-    fun filterByCategory(category: ProviderCategory?) {
+    private fun filterByCategory(category: ProviderCategory?) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, selectedCategory = category) }
+            updateState { copy(isLoading = true, selectedCategory = category) }
 
             val flow = if (category != null) {
                 getProvidersUseCase.byCategory(category)
@@ -80,12 +92,12 @@ class HomeViewModel @Inject constructor(
             }
 
             flow.catch { e ->
-                _uiState.update {
-                    it.copy(isLoading = false, error = e.message)
+                updateState {
+                    copy(isLoading = false, error = e.message)
                 }
             }.collect { providers ->
-                _uiState.update {
-                    it.copy(providers = providers, isLoading = false)
+                updateState {
+                    copy(providers = providers, isLoading = false)
                 }
             }
         }
@@ -94,8 +106,8 @@ class HomeViewModel @Inject constructor(
     /**
      * Search providers by query.
      */
-    fun search(query: String) {
-        _uiState.update { it.copy(searchQuery = query) }
+    private fun search(query: String) {
+        updateState { copy(searchQuery = query) }
 
         if (query.isBlank()) {
             loadProviders()
@@ -103,17 +115,17 @@ class HomeViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            updateState { copy(isLoading = true) }
 
             getProvidersUseCase.search(query)
                 .catch { e ->
-                    _uiState.update {
-                        it.copy(isLoading = false, error = e.message)
+                    updateState {
+                        copy(isLoading = false, error = e.message)
                     }
                 }
                 .collect { providers ->
-                    _uiState.update {
-                        it.copy(providers = providers, isLoading = false)
+                    updateState {
+                        copy(providers = providers, isLoading = false)
                     }
                 }
         }
@@ -122,25 +134,21 @@ class HomeViewModel @Inject constructor(
     /**
      * Refresh providers from remote.
      */
-    fun refresh() {
+    private fun refresh() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            updateState { copy(isLoading = true) }
 
             refreshProvidersUseCase()
                 .onSuccess {
-                    _uiState.update { it.copy(isLoading = false) }
+                    updateState { copy(isLoading = false) }
                 }
                 .onFailure { e ->
-                    _uiState.update {
-                        it.copy(isLoading = false, error = e.message)
+                    updateState {
+                        copy(isLoading = false, error = e.message)
                     }
                 }
         }
     }
 
     override fun initialState(): HomeUiState = HomeUiState()
-
-    override fun handleEvent(event: Unit) {
-        // Events are handled directly via public methods
-    }
 }

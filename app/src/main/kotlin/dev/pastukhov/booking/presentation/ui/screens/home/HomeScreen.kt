@@ -36,6 +36,7 @@ import dev.pastukhov.booking.domain.model.ProviderCategory
 import dev.pastukhov.booking.presentation.ui.components.EmptyState
 import dev.pastukhov.booking.presentation.ui.components.ErrorState
 import dev.pastukhov.booking.presentation.ui.components.ProviderCard
+import dev.pastukhov.booking.presentation.viewmodel.HomeEvent
 import dev.pastukhov.booking.presentation.viewmodel.HomeUiState
 import dev.pastukhov.booking.presentation.viewmodel.HomeViewModel
 
@@ -47,14 +48,14 @@ fun HomeScreen(
     onProviderClick: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.state.collectAsState()
 
     HomeScreenContent(
         uiState = uiState,
-        onSearch = { viewModel.search(it) },
-        onFilterByCategory = { viewModel.filterByCategory(it) },
-        onRefresh = { viewModel.refresh() },
-        onLoadProviders = { viewModel.loadProviders() },
+        onSearch = { viewModel.handleEvent(HomeEvent.Search(it)) },
+        onFilterByCategory = { viewModel.handleEvent(HomeEvent.FilterByCategory(it)) },
+        onRefresh = { viewModel.handleEvent(HomeEvent.Refresh) },
+        onLoadProviders = { viewModel.handleEvent(HomeEvent.LoadProviders) },
         onProviderClick = onProviderClick
     )
 }
