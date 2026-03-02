@@ -1,7 +1,5 @@
 package dev.pastukhov.booking.presentation.ui.screens.booking
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pastukhov.booking.data.local.dao.BookingDao
 import dev.pastukhov.booking.data.mapper.toDomain
@@ -11,11 +9,7 @@ import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.domain.model.BookingStatus
 import dev.pastukhov.booking.domain.model.PaymentMethod
 import dev.pastukhov.booking.domain.model.TimeSlot
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import dev.pastukhov.booking.presentation.viewmodel.BaseViewModel
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.UUID
@@ -28,10 +22,9 @@ import javax.inject.Inject
 @HiltViewModel
 class BookingViewModel @Inject constructor(
     private val bookingDao: BookingDao
-) : ViewModel() {
+) : BaseViewModel<BookingUiState, Any>() {
 
-    private val _uiState = MutableStateFlow(BookingUiState())
-    val uiState: StateFlow<BookingUiState> = _uiState.asStateFlow()
+    override fun initialState(): BookingUiState = BookingUiState()
 
     /**
      * Initialize booking with provider and service data.
@@ -42,8 +35,8 @@ class BookingViewModel @Inject constructor(
         val service = MockData.getServicesForProvider(providerId).find { it.id == serviceId }
 
         if (provider != null && service != null) {
-            _uiState.update {
-                it.copy(
+            updateState {
+                copy(
                     provider = provider.toDomain(),
                     service = service.toDomain(),
                     currentStep = BookingStep.SELECT_DATETIME
@@ -59,8 +52,12 @@ class BookingViewModel @Inject constructor(
      * In a real app, this would come from the backend.
      */
     fun loadTimeSlots(date: LocalDate = LocalDate.now()) {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoadingSlots = true) }
+        launchWithErrorHandling(
+            onError = { throwable ->
+                updateState { copy(error = throwable.message, isLoadingSlots = false) }
+            }
+        ) {
+            updateState { copy(isLoadingSlots = true) }
 
             // Simulate network delay
             kotlinx.coroutines.delay(500)
@@ -68,8 +65,8 @@ class BookingViewModel @Inject constructor(
             // Generate mock time slots (9:00 - 18:00, 30-minute intervals)
             val slots = generateTimeSlots(date)
 
-            _uiState.update {
-                it.copy(
+            updateState {
+                copy(
                     availableTimeSlots = slots,
                     isLoadingSlots = false
                 )
@@ -113,8 +110,8 @@ class BookingViewModel @Inject constructor(
      * Select a date for the booking.
      */
     fun selectDate(date: LocalDate) {
-        _uiState.update {
-            it.copy(
+        updateState {
+            copy(
                 selectedDate = date,
                 selectedTime = null,
                 dateError = null
@@ -127,8 +124,8 @@ class BookingViewModel @Inject constructor(
      * Select a time slot.
      */
     fun selectTime(time: LocalTime) {
-        _uiState.update {
-            it.copy(
+        updateState {
+            copy(
                 selectedTime = time,
                 timeError = null
             )
@@ -139,15 +136,15 @@ class BookingViewModel @Inject constructor(
      * Update notes for the booking.
      */
     fun updateNotes(notes: String) {
-        _uiState.update { it.copy(notes = notes) }
+        updateState { copy(notes = notes) }
     }
 
     /**
      * Update user phone number.
      */
     fun updatePhone(phone: String) {
-        _uiState.update {
-            it.copy(
+        updateState {
+            copy(
                 userPhone = phone,
                 phoneError = if (phone.length < 10) "Phone number is too short" else null
             )
@@ -158,7 +155,7 @@ class BookingViewModel @Inject constructor(
      * Select payment method.
      */
     fun selectPaymentMethod(method: PaymentMethod) {
-        _uiState.update { it.copy(selectedPaymentMethod = method) }
+        updateState { copy(selectedPaymentMethod = method) }
     }
 
     /**
@@ -166,8 +163,8 @@ class BookingViewModel @Inject constructor(
      */
     fun updateCardNumber(number: String) {
         val filtered = number.filter { it.isDigit() }.take(16)
-        _uiState.update {
-            it.copy(
+        updateState {
+            copy(
                 cardNumber = filtered,
                 cardNumberError = if (filtered.length < 16) "Invalid card number" else null
             )
@@ -176,8 +173,8 @@ class BookingViewModel @Inject constructor(
 
     fun updateCardExpiry(expiry: String) {
         val filtered = expiry.filter { it.isDigit() }.take(4)
-        _uiState.update {
-            it.copy(
+        updateState {
+            copy(
                 cardExpiry = filtered,
                 cardExpiryError = if (filtered.length < 4) "Invalid expiry" else null
             )
@@ -186,8 +183,8 @@ class BookingViewModel @Inject constructor(
 
     fun updateCardCvv(cvv: String) {
         val filtered = cvv.filter { it.isDigit() }.take(3)
-        _uiState.update {
-            it.copy(
+        updateState {
+            copy(
                 cardCvv = filtered,
                 cardCvvError = if (filtered.length < 3) "Invalid CVV" else null
             )
@@ -198,17 +195,17 @@ class BookingViewModel @Inject constructor(
      * Validate current step and proceed to next.
      */
     fun proceedToNextStep() {
-        val currentState = _uiState.value
+        val currentState = state.value
 
         when (currentState.currentStep) {
             BookingStep.SELECT_DATETIME -> {
                 if (currentState.canProceedToConfirmation) {
-                    _uiState.update { it.copy(currentStep = BookingStep.CONFIRMATION) }
+                    updateState { copy(currentStep = BookingStep.CONFIRMATION) }
                 }
             }
             BookingStep.CONFIRMATION -> {
                 if (currentState.canProceedToPayment) {
-                    _uiState.update { it.copy(currentStep = BookingStep.PAYMENT) }
+                    updateState { copy(currentStep = BookingStep.PAYMENT) }
                 }
             }
             BookingStep.PAYMENT -> {
@@ -226,17 +223,17 @@ class BookingViewModel @Inject constructor(
      * Go back to previous step.
      */
     fun goBack() {
-        val currentState = _uiState.value
+        val currentState = state.value
 
         when (currentState.currentStep) {
             BookingStep.SELECT_DATETIME -> {
                 // Can't go back from first step
             }
             BookingStep.CONFIRMATION -> {
-                _uiState.update { it.copy(currentStep = BookingStep.SELECT_DATETIME) }
+                updateState { copy(currentStep = BookingStep.SELECT_DATETIME) }
             }
             BookingStep.PAYMENT -> {
-                _uiState.update { it.copy(currentStep = BookingStep.CONFIRMATION) }
+                updateState { copy(currentStep = BookingStep.CONFIRMATION) }
             }
             BookingStep.SUCCESS -> {
                 // Can't go back from success
@@ -248,14 +245,18 @@ class BookingViewModel @Inject constructor(
      * Complete the booking and save to database.
      */
     private fun completeBooking() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+        launchWithErrorHandling(
+            onError = { throwable ->
+                updateState { copy(isLoading = false, error = "Failed to save booking: ${throwable.message}") }
+            }
+        ) {
+            updateState { copy(isLoading = true) }
 
-            val state = _uiState.value
-            val provider = state.provider ?: return@launch
-            val service = state.service ?: return@launch
-            val date = state.selectedDate ?: return@launch
-            val time = state.selectedTime ?: return@launch
+            val currentState = state.value
+            val provider = currentState.provider ?: return@launchWithErrorHandling
+            val service = currentState.service ?: return@launchWithErrorHandling
+            val date = currentState.selectedDate ?: return@launchWithErrorHandling
+            val time = currentState.selectedTime ?: return@launchWithErrorHandling
 
             // Create booking object
             val booking = Booking(
@@ -270,34 +271,25 @@ class BookingViewModel @Inject constructor(
                 time = time,
                 status = BookingStatus.PENDING,
                 totalPrice = service.price,
-                notes = state.notes.ifBlank { null },
-                paymentMethod = state.selectedPaymentMethod,
-                cardNumber = if (state.selectedPaymentMethod == PaymentMethod.CARD)
-                    state.cardNumber else null,
-                cardExpiry = if (state.selectedPaymentMethod == PaymentMethod.CARD)
-                    state.cardExpiry else null,
+                notes = currentState.notes.ifBlank { null },
+                paymentMethod = currentState.selectedPaymentMethod,
+                cardNumber = if (currentState.selectedPaymentMethod == PaymentMethod.CARD)
+                    currentState.cardNumber else null,
+                cardExpiry = if (currentState.selectedPaymentMethod == PaymentMethod.CARD)
+                    currentState.cardExpiry else null,
                 isPaid = true // In real app, would verify payment
             )
 
             // Save to database
-            try {
-                bookingDao.insertBooking(booking.toEntity())
+            bookingDao.insertBooking(booking.toEntity())
 
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        completedBooking = booking,
-                        isBookingComplete = true,
-                        currentStep = BookingStep.SUCCESS
-                    )
-                }
-            } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        error = "Failed to save booking: ${e.message}"
-                    )
-                }
+            updateState {
+                copy(
+                    isLoading = false,
+                    completedBooking = booking,
+                    isBookingComplete = true,
+                    currentStep = BookingStep.SUCCESS
+                )
             }
         }
     }
@@ -306,13 +298,13 @@ class BookingViewModel @Inject constructor(
      * Reset booking flow.
      */
     fun resetBooking() {
-        _uiState.value = BookingUiState()
+        updateState { BookingUiState() }
     }
 
     /**
      * Clear error message.
      */
     fun clearError() {
-        _uiState.update { it.copy(error = null) }
+        updateState { copy(error = null) }
     }
 }

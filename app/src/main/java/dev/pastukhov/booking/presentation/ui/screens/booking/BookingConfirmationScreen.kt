@@ -52,7 +52,7 @@ fun BookingConfirmationScreen(
     onNext: () -> Unit,
     viewModel: BookingViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.state.collectAsState()
 
     Scaffold(
         topBar = {

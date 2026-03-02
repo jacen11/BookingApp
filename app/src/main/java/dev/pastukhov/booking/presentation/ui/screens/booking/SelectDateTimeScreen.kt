@@ -59,7 +59,7 @@ fun SelectDateTimeScreen(
     onNext: () -> Unit,
     viewModel: BookingViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.state.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
 
     // Initialize booking when screen loads

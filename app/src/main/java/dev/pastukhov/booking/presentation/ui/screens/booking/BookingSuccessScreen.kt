@@ -70,7 +70,7 @@ fun BookingSuccessScreen(
     onDone: () -> Unit,
     viewModel: BookingViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current
     val booking = uiState.completedBooking
 

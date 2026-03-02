@@ -45,7 +45,7 @@ fun PaymentScreen(
     onComplete: () -> Unit,
     viewModel: BookingViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.state.collectAsState()
 
     PaymentContent(
         uiState = uiState,
