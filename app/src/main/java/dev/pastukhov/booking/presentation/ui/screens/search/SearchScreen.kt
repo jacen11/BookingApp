@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Mic
@@ -43,6 +44,7 @@ import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.Provider
 import dev.pastukhov.booking.domain.model.ProviderCategory
 import dev.pastukhov.booking.presentation.ui.components.ProviderCard
+import dev.pastukhov.booking.presentation.viewmodel.SearchEvent
 import dev.pastukhov.booking.presentation.viewmodel.SearchViewModel
 
 /**
@@ -55,7 +57,7 @@ fun SearchScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.state.collectAsState()
 
     Scaffold(
         topBar = {
@@ -63,7 +65,7 @@ fun SearchScreen(
                 // Search bar
                 SearchBar(
                     query = uiState.searchQuery,
-                    onQueryChange = viewModel::onSearchQueryChange,
+                    onQueryChange = { viewModel.handleEvent(SearchEvent.OnSearchQueryChange(it)) },
                     onSearch = {},
                     active = false,
                     onActiveChange = {},
@@ -88,7 +90,7 @@ fun SearchScreen(
                     item {
                         FilterChip(
                             selected = uiState.selectedCategory == null,
-                            onClick = { viewModel.onCategorySelected(null) },
+                            onClick = { viewModel.handleEvent(SearchEvent.OnCategorySelected(null)) },
                             label = { Text(stringResource(R.string.filter_all)) }
                         )
                     }
@@ -102,7 +104,7 @@ fun SearchScreen(
                     ) { (category, labelRes) ->
                         FilterChip(
                             selected = uiState.selectedCategory == category,
-                            onClick = { viewModel.onCategorySelected(category) },
+                            onClick = { viewModel.handleEvent(SearchEvent.OnCategorySelected(category)) },
                             label = { Text(stringResource(labelRes)) }
                         )
                     }
@@ -110,9 +112,9 @@ fun SearchScreen(
             }
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = viewModel::toggleViewMode) {
+            FloatingActionButton(onClick = { viewModel.handleEvent(SearchEvent.OnToggleViewMode) }) {
                 Icon(
-                    imageVector = if (uiState.isMapView) Icons.Default.List else Icons.Default.Map,
+                    imageVector = if (uiState.isMapView) Icons.AutoMirrored.Filled.List else Icons.Default.Map,
                     contentDescription = if (uiState.isMapView) 
                         stringResource(R.string.view_list) 
                     else 

@@ -1,17 +1,20 @@
 package dev.pastukhov.booking.presentation.viewmodel
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pastukhov.booking.domain.model.ProviderCategory
 import dev.pastukhov.booking.domain.repository.ProviderRepository
 import dev.pastukhov.booking.presentation.ui.screens.search.SearchUiState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+/**
+ * Events for Search screen.
+ */
+sealed class SearchEvent {
+    data class OnSearchQueryChange(val query: String) : SearchEvent()
+    data class OnCategorySelected(val category: ProviderCategory?) : SearchEvent()
+    data object OnToggleViewMode : SearchEvent()
+    data object OnLoadProviders : SearchEvent()
+}
 
 /**
  * ViewModel for Search screen.
@@ -20,47 +23,55 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val providerRepository: ProviderRepository
-) : ViewModel() {
+) : BaseViewModel<SearchUiState, SearchEvent>() {
 
-    private val _uiState = MutableStateFlow(SearchUiState())
-    val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
+    override fun initialState(): SearchUiState = SearchUiState()
 
     init {
-        loadProviders()
+        handleEvent(SearchEvent.OnLoadProviders)
     }
 
-    fun onSearchQueryChange(query: String) {
-        _uiState.update { it.copy(searchQuery = query) }
+    override fun handleEvent(event: SearchEvent) {
+        when (event) {
+            is SearchEvent.OnSearchQueryChange -> onSearchQueryChange(event.query)
+            is SearchEvent.OnCategorySelected -> onCategorySelected(event.category)
+            is SearchEvent.OnToggleViewMode -> toggleViewMode()
+            is SearchEvent.OnLoadProviders -> loadProviders()
+        }
+    }
+
+    private fun onSearchQueryChange(query: String) {
+        updateState { copy(searchQuery = query) }
         filterProviders()
     }
 
-    fun onCategorySelected(category: ProviderCategory?) {
-        _uiState.update { it.copy(selectedCategory = category) }
+    private fun onCategorySelected(category: ProviderCategory?) {
+        updateState { copy(selectedCategory = category) }
         filterProviders()
     }
 
-    fun toggleViewMode() {
-        _uiState.update { it.copy(isMapView = !it.isMapView) }
+    private fun toggleViewMode() {
+        updateState { copy(isMapView = !isMapView) }
     }
 
     private fun loadProviders() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            try {
-                providerRepository.getProviders().collect { providers ->
-                    _uiState.update {
-                        it.copy(
-                            providers = providers,
-                            filteredProviders = providers,
-                            isLoading = false
-                        )
-                    }
-                }
-            } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
+        launchWithErrorHandling(
+            onError = { throwable ->
+                updateState {
+                    copy(
                         isLoading = false,
-                        error = e.message
+                        error = throwable.message
+                    )
+                }
+            }
+        ) {
+            updateState { copy(isLoading = true) }
+            providerRepository.getProviders().collect { providers ->
+                updateState {
+                    copy(
+                        providers = providers,
+                        filteredProviders = providers,
+                        isLoading = false
                     )
                 }
             }
@@ -68,7 +79,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun filterProviders() {
-        val currentState = _uiState.value
+        val currentState = state.value
         val filtered = currentState.providers.filter { provider ->
             val matchesQuery = if (currentState.searchQuery.isBlank()) {
                 true
@@ -84,6 +95,6 @@ class SearchViewModel @Inject constructor(
             matchesQuery && matchesCategory
         }
 
-        _uiState.update { it.copy(filteredProviders = filtered) }
+        updateState { copy(filteredProviders = filtered) }
     }
 }
