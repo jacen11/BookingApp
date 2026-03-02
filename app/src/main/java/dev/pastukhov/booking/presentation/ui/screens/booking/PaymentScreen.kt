@@ -23,10 +23,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.PaymentMethod
+import dev.pastukhov.booking.domain.model.Service
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.CardDetailsSection
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.PaymentMethodsSection
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.SecurityNotice
@@ -45,15 +47,40 @@ fun PaymentScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    PaymentContent(
+        uiState = uiState,
+        onBack = onBack,
+        onSelectPaymentMethod = { viewModel.selectPaymentMethod(it) },
+        onCardNumberChange = { viewModel.updateCardNumber(it) },
+        onCardExpiryChange = { viewModel.updateCardExpiry(it) },
+        onCardCvvChange = { viewModel.updateCardCvv(it) },
+        onPay = {
+            viewModel.proceedToNextStep()
+            onComplete()
+        }
+    )
+}
+
+/**
+ * Stateless version of PaymentScreen for better testability and previews.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PaymentContent(
+    uiState: BookingUiState,
+    onBack: () -> Unit,
+    onSelectPaymentMethod: (PaymentMethod) -> Unit,
+    onCardNumberChange: (String) -> Unit,
+    onCardExpiryChange: (String) -> Unit,
+    onCardCvvChange: (String) -> Unit,
+    onPay: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.payment)) },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        viewModel.goBack()
-                        onBack()
-                    }) {
+                    IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back)
@@ -82,7 +109,7 @@ fun PaymentScreen(
                 // Payment Methods Section
                 PaymentMethodsSection(
                     selectedMethod = uiState.selectedPaymentMethod,
-                    onSelectMethod = { viewModel.selectPaymentMethod(it) }
+                    onSelectMethod = onSelectPaymentMethod
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -96,9 +123,9 @@ fun PaymentScreen(
                         cardExpiryError = uiState.cardExpiryError,
                         cardCvv = uiState.cardCvv,
                         cardCvvError = uiState.cardCvvError,
-                        onCardNumberChange = { viewModel.updateCardNumber(it) },
-                        onCardExpiryChange = { viewModel.updateCardExpiry(it) },
-                        onCardCvvChange = { viewModel.updateCardCvv(it) }
+                        onCardNumberChange = onCardNumberChange,
+                        onCardExpiryChange = onCardExpiryChange,
+                        onCardCvvChange = onCardCvvChange
                     )
                 }
 
@@ -112,10 +139,7 @@ fun PaymentScreen(
                 // Total and Pay Button
                 TotalSection(
                     totalPrice = uiState.service?.price ?: 0.0,
-                    onPay = {
-                        viewModel.proceedToNextStep()
-                        onComplete()
-                    },
+                    onPay = onPay,
                     enabled = uiState.canCompleteBooking
                 )
 
@@ -123,4 +147,41 @@ fun PaymentScreen(
             }
         }
     }
+}
+
+/**
+ * Preview version of PaymentScreen with mock data.
+ */
+@Preview(showBackground = true)
+@Composable
+fun PaymentScreenPreview() {
+    val mockService = Service(
+        id = "s1",
+        providerId = "p1",
+        name = "Full Body Massage",
+        description = "Relaxing 60-minute massage",
+        price = 80.0,
+        duration = 60
+    )
+
+    val mockUiState = BookingUiState(
+        currentStep = BookingStep.PAYMENT,
+        service = mockService,
+        selectedPaymentMethod = PaymentMethod.CARD,
+        cardNumber = "4532015112830366",
+        cardExpiry = "12/25",
+        cardCvv = "123",
+        isLoading = false,
+        error = null,
+    )
+
+    PaymentContent(
+        uiState = mockUiState,
+        onBack = {},
+        onSelectPaymentMethod = {},
+        onCardNumberChange = {},
+        onCardExpiryChange = {},
+        onCardCvvChange = {},
+        onPay = {}
+    )
 }
