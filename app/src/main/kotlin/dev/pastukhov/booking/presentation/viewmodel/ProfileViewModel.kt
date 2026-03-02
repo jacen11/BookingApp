@@ -1,30 +1,11 @@
 package dev.pastukhov.booking.presentation.viewmodel
 
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pastukhov.booking.data.repository.UserSettingsRepository
-import dev.pastukhov.booking.domain.model.AppLanguage
-import dev.pastukhov.booking.domain.model.AppTheme
 import dev.pastukhov.booking.domain.repository.UserRepository
-import dev.pastukhov.booking.presentation.ui.screens.profile.ProfileUiState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import dev.pastukhov.booking.presentation.model.ProfileEvent
+import dev.pastukhov.booking.presentation.model.ProfileUiState
 import javax.inject.Inject
-
-/**
- * Events for Profile screen.
- */
-sealed class ProfileEvent {
-    data object LoadUserData : ProfileEvent()
-    data object LoadSettings : ProfileEvent()
-    data class SetLanguage(val language: AppLanguage) : ProfileEvent()
-    data class SetTheme(val theme: AppTheme) : ProfileEvent()
-    data class SetNotifications(val enabled: Boolean) : ProfileEvent()
-    data object Logout : ProfileEvent()
-}
 
 /**
  * ViewModel for Profile screen.
@@ -36,12 +17,9 @@ class ProfileViewModel @Inject constructor(
     private val settingsRepository: UserSettingsRepository
 ) : BaseViewModel<ProfileUiState, ProfileEvent>() {
 
-    private val _uiState = MutableStateFlow(ProfileUiState())
-    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
-
     init {
-        loadUserData()
-        loadSettings()
+        handleEvent(ProfileEvent.LoadUserData)
+        handleEvent(ProfileEvent.LoadSettings)
     }
 
     override fun initialState(): ProfileUiState = ProfileUiState()
@@ -58,23 +36,23 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun loadUserData() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            try {
-                userRepository.getCurrentUser().collect { user ->
-                    _uiState.update { it.copy(user = user!!, isLoading = false) }
-                }
-            } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = e.message) }
+        launchWithErrorHandling(
+            onError = { exception ->
+                updateState { copy(isLoading = false, error = exception.message) }
+            }
+        ) {
+            updateState { copy(isLoading = true) }
+            userRepository.getCurrentUser().collect { user ->
+                updateState { copy(user = user!!, isLoading = false) }
             }
         }
     }
 
     private fun loadSettings() {
-        viewModelScope.launch {
+        launchWithErrorHandling {
             settingsRepository.userSettings.collect { settings ->
-                _uiState.update {
-                    it.copy(
+                updateState {
+                    copy(
                         language = settings.language,
                         theme = settings.theme,
                         notificationsEnabled = settings.notificationsEnabled
@@ -84,28 +62,27 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun setLanguage(language: AppLanguage) {
-        viewModelScope.launch {
+    private fun setLanguage(language: dev.pastukhov.booking.domain.model.AppLanguage) {
+        launchWithErrorHandling {
             settingsRepository.setLanguage(language)
         }
     }
 
-    private fun setTheme(theme: AppTheme) {
-        viewModelScope.launch {
+    private fun setTheme(theme: dev.pastukhov.booking.domain.model.AppTheme) {
+        launchWithErrorHandling {
             settingsRepository.setTheme(theme)
         }
     }
 
     private fun setNotifications(enabled: Boolean) {
-        viewModelScope.launch {
+        launchWithErrorHandling {
             settingsRepository.setNotifications(enabled)
         }
     }
 
     private fun logout() {
-        viewModelScope.launch {
+        launchWithErrorHandling {
             settingsRepository.clearSettings()
-            // Clear user session would go here
         }
     }
 }
