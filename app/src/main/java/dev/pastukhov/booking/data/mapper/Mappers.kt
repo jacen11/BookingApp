@@ -14,6 +14,7 @@ import dev.pastukhov.booking.domain.model.ProviderCategory
 import dev.pastukhov.booking.domain.model.Service
 import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.domain.model.BookingStatus
+import dev.pastukhov.booking.domain.model.PaymentMethod
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -139,6 +140,7 @@ fun BookingDto.toDomain(): Booking = Booking(
     userId = userId,
     providerId = providerId,
     providerName = providerName,
+    providerAddress = "",
     serviceId = serviceId,
     serviceName = serviceName,
     date = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE),
@@ -153,13 +155,18 @@ fun BookingEntity.toDomain(): Booking = Booking(
     userId = userId,
     providerId = providerId,
     providerName = providerName,
+    providerAddress = providerAddress,
     serviceId = serviceId,
     serviceName = serviceName,
     date = LocalDate.parse(date),
     time = LocalTime.parse(time),
     status = BookingStatus.fromString(status),
     totalPrice = totalPrice,
-    notes = notes
+    notes = notes,
+    paymentMethod = paymentMethod?.let { PaymentMethod.fromString(it) },
+    cardNumber = cardNumber,
+    cardExpiry = cardExpiry,
+    isPaid = isPaid
 )
 
 fun Booking.toEntity(): BookingEntity = BookingEntity(
@@ -167,13 +174,19 @@ fun Booking.toEntity(): BookingEntity = BookingEntity(
     userId = userId,
     providerId = providerId,
     providerName = providerName,
+    providerAddress = providerAddress,
     serviceId = serviceId,
     serviceName = serviceName,
     date = date.toString(),
     time = time.toString(),
     status = status.name,
     totalPrice = totalPrice,
-    notes = notes
+    notes = notes,
+    paymentMethod = paymentMethod?.name,
+    cardNumber = cardNumber,
+    cardExpiry = cardExpiry,
+    cardCvv = null,
+    isPaid = isPaid
 )
 
 fun Booking.toDto(): BookingDto = BookingDto(

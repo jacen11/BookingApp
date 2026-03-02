@@ -11,13 +11,19 @@ data class Booking(
     val userId: String,
     val providerId: String,
     val providerName: String,
+    val providerAddress: String,
     val serviceId: String,
     val serviceName: String,
     val date: LocalDate,
     val time: LocalTime,
     val status: BookingStatus,
     val totalPrice: Double,
-    val notes: String? = null
+    val notes: String? = null,
+    // Payment fields
+    val paymentMethod: PaymentMethod? = null,
+    val cardNumber: String? = null,
+    val cardExpiry: String? = null,
+    val isPaid: Boolean = false
 ) {
     /**
      * Returns formatted date string.
@@ -41,7 +47,14 @@ data class Booking(
     /**
      * Returns formatted price string.
      */
-    fun formattedPrice(): String = "$$totalPrice"
+    fun formattedPrice(): String = "$totalPrice"
+
+    /**
+     * Returns masked card number (last 4 digits).
+     */
+    fun maskedCardNumber(): String? {
+        return cardNumber?.let { "**** **** **** ${it.takeLast(4)}" }
+    }
 }
 
 /**
@@ -57,6 +70,21 @@ enum class BookingStatus(val displayName: String) {
     companion object {
         fun fromString(value: String): BookingStatus {
             return entries.find { it.name.equals(value, ignoreCase = true) } ?: PENDING
+        }
+    }
+}
+
+/**
+ * Payment method options.
+ */
+enum class PaymentMethod(val displayName: String) {
+    CARD("Tarjeta"),
+    CASH("Efectivo"),
+    GOOGLE_PAY("Google Pay");
+
+    companion object {
+        fun fromString(value: String): PaymentMethod {
+            return entries.find { it.name.equals(value, ignoreCase = true) } ?: CARD
         }
     }
 }

@@ -4,7 +4,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -15,6 +18,11 @@ import dev.pastukhov.booking.presentation.ui.screens.HomeScreen
 import dev.pastukhov.booking.presentation.ui.screens.LoginScreen
 import dev.pastukhov.booking.presentation.ui.screens.ProviderDetailScreen
 import dev.pastukhov.booking.presentation.ui.screens.profile.ProfileScreen
+import dev.pastukhov.booking.presentation.ui.screens.booking.BookingConfirmationScreen
+import dev.pastukhov.booking.presentation.ui.screens.booking.BookingSuccessScreen
+import dev.pastukhov.booking.presentation.ui.screens.booking.BookingViewModel
+import dev.pastukhov.booking.presentation.ui.screens.booking.PaymentScreen
+import dev.pastukhov.booking.presentation.ui.screens.booking.SelectDateTimeScreen
 import dev.pastukhov.booking.presentation.ui.screens.search.SearchScreen
 
 /**
@@ -139,12 +147,79 @@ fun BookingNavHost(
             ) { backStackEntry ->
                 val providerId = backStackEntry.arguments?.getString("providerId") ?: return@composable
                 val serviceId = backStackEntry.arguments?.getString("serviceId") ?: return@composable
-                // TODO: Create SelectDateTimeScreen
+                
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry(Screen.SelectDateTime.route)
+                }
+                val bookingViewModel: BookingViewModel = hiltViewModel(parentEntry)
+                
+                SelectDateTimeScreen(
+                    providerId = providerId,
+                    serviceId = serviceId,
+                    onBack = { navController.popBackStack() },
+                    onNext = { navController.navigate(Screen.ConfirmBooking.route) },
+                    viewModel = bookingViewModel
+                )
             }
 
             // Confirm Booking Screen
-            composable(route = Screen.ConfirmBooking.route) {
-                // TODO: Create BookingConfirmationScreen
+            composable(
+                route = Screen.ConfirmBooking.route
+            ) { backStackEntry ->
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry(Screen.SelectDateTime.route)
+                }
+                val bookingViewModel: BookingViewModel = hiltViewModel(parentEntry)
+                
+                BookingConfirmationScreen(
+                    onBack = { navController.popBackStack() },
+                    onNext = { navController.navigate(Screen.Payment.route) },
+                    viewModel = bookingViewModel
+                )
+            }
+
+            // Payment Screen
+            composable(
+                route = Screen.Payment.route
+            ) { backStackEntry ->
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry(Screen.SelectDateTime.route)
+                }
+                val bookingViewModel: BookingViewModel = hiltViewModel(parentEntry)
+                
+                PaymentScreen(
+                    onBack = { navController.popBackStack() },
+                    onComplete = { 
+                        navController.navigate(Screen.BookingSuccess.route) {
+                            popUpTo(Screen.SelectDateTime.route) { inclusive = true }
+                        }
+                    },
+                    viewModel = bookingViewModel
+                )
+            }
+
+            // Booking Success Screen
+            composable(
+                route = Screen.BookingSuccess.route
+            ) { backStackEntry ->
+                val parentEntry = remember(backStackEntry) {
+                    navController.getBackStackEntry(Screen.SelectDateTime.route)
+                }
+                val bookingViewModel: BookingViewModel = hiltViewModel(parentEntry)
+                
+                BookingSuccessScreen(
+                    onViewBookings = {
+                        navController.navigate(Screen.MyBookings.route) {
+                            popUpTo(Screen.Home.route)
+                        }
+                    },
+                    onDone = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Home.route) { inclusive = true }
+                        }
+                    },
+                    viewModel = bookingViewModel
+                )
             }
 
             // My Bookings Screen

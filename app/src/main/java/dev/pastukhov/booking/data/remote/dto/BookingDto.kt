@@ -12,6 +12,7 @@ data class BookingDto(
     @JsonProperty("userId") val userId: String,
     @JsonProperty("providerId") val providerId: String,
     @JsonProperty("providerName") val providerName: String,
+    @JsonProperty("providerAddress") val providerAddress: String = "",
     @JsonProperty("serviceId") val serviceId: String,
     @JsonProperty("serviceName") val serviceName: String,
     @JsonProperty("date") val date: String,
@@ -19,5 +20,7 @@ data class BookingDto(
     @JsonProperty("status") val status: String,
     @JsonProperty("totalPrice") val totalPrice: Double,
     @JsonProperty("notes") val notes: String? = null,
+    @JsonProperty("paymentMethod") val paymentMethod: String? = null,
+    @JsonProperty("isPaid") val isPaid: Boolean = false,
     @JsonProperty("createdAt") val createdAt: String? = null
 )

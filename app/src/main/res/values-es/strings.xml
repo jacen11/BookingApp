@@ -38,6 +38,7 @@
     <string name="book_now">Reservar Ahora</string>
     <string name="select_date">Seleccionar Fecha</string>
     <string name="select_time">Seleccionar Hora</string>
+    <string name="select_datetime">Seleccionar Fecha y Hora</string>
     <string name="confirm_booking">Confirmar Reserva</string>
     <string name="booking_confirmed">¡Reserva Confirmada!</string>
     <string name="booking_details">Detalles de la Reserva</string>
@@ -45,6 +46,37 @@
     <string name="price">Precio</string>
     <string name="duration">Duración</string>
     <string name="minutes">min</string>
+    <string name="provider">Proveedor</string>
+    <string name="address">Dirección</string>
+    <string name="next">Siguiente</string>
+    <string name="back">Atrás</string>
+    <string name="confirm">Confirmar</string>
+    <string name="tap_to_select_date">Toca para seleccionar fecha</string>
+    <string name="select_date_first">Selecciona una fecha primero</string>
+    <string name="unavailable">No disponible</string>
+    <string name="booking_summary">Resumen de la Reserva</string>
+    <string name="contact_information">Información de Contacto</string>
+    <string name="phone_number">Número de Teléfono</string>
+    <string name="notes_for_provider">Notas para el Proveedor</string>
+    <string name="notes_optional">Notas (opcional)</string>
+    <string name="notes_placeholder">¿Alguna solicitud especial o información para el proveedor?</string>
+    <string name="continue_to_payment">Continuar al Pago</string>
+    <string name="payment">Pago</string>
+    <string name="payment_method">Método de Pago</string>
+    <string name="card_details">Datos de la Tarjeta</string>
+    <string name="card_number">Número de Tarjeta</string>
+    <string name="expiry">Vencimiento</string>
+    <string name="cvv">CVV</string>
+    <string name="security_notice">Tu información de pago está segura y encriptada.</string>
+    <string name="total">Total</string>
+    <string name="total_paid">Total Pagado</string>
+    <string name="pay_and_book">Pagar y Reservar</string>
+    <string name="booking_success">¡Reserva Exitosa!</string>
+    <string name="booking_success_message">Tu cita ha sido confirmada.</string>
+    <string name="booking_number">Reserva #</string>
+    <string name="share">Compartir</string>
+    <string name="view_my_bookings">Mis Citas</string>
+    <string name="done">Hecho</string>
 
     <!-- Profile -->
     <string name="edit_profile">Editar Perfil</string>

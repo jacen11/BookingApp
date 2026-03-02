@@ -58,6 +58,7 @@ data class BookingEntity(
     val userId: String,
     val providerId: String,
     val providerName: String,
+    val providerAddress: String,
     val serviceId: String,
     val serviceName: String,
     val date: String,
@@ -65,5 +66,11 @@ data class BookingEntity(
     val status: String,
     val totalPrice: Double,
     val notes: String? = null,
+    // Payment fields
+    val paymentMethod: String? = null,
+    val cardNumber: String? = null,
+    val cardExpiry: String? = null,
+    val cardCvv: String? = null,
+    val isPaid: Boolean = false,
     val createdAt: Long = System.currentTimeMillis()
 )

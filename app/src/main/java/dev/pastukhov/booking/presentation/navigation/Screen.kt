@@ -45,6 +45,12 @@ sealed class Screen(val route: String) {
         const val ARG_TIME = "time"
     }
 
+    // Payment screen
+    data object Payment : Screen("booking/payment")
+
+    // Booking success screen
+    data object BookingSuccess : Screen("booking/success")
+
     // Profile screens
     data object Profile : Screen("profile")
     data object MyBookings : Screen("profile/bookings")

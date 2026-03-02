@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4eaa10b1b529d85927eedd0f5c80f8d8",
+    "identityHash": "86f011f03c5f2c7c943c1d642d2bde5a",
     "entities": [
       {
         "tableName": "users",
@@ -198,7 +198,7 @@
       },
       {
         "tableName": "bookings",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `userId` TEXT NOT NULL, `providerId` TEXT NOT NULL, `providerName` TEXT NOT NULL, `serviceId` TEXT NOT NULL, `serviceName` TEXT NOT NULL, `date` TEXT NOT NULL, `time` TEXT NOT NULL, `status` TEXT NOT NULL, `totalPrice` REAL NOT NULL, `notes` TEXT, `createdAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `userId` TEXT NOT NULL, `providerId` TEXT NOT NULL, `providerName` TEXT NOT NULL, `providerAddress` TEXT NOT NULL, `serviceId` TEXT NOT NULL, `serviceName` TEXT NOT NULL, `date` TEXT NOT NULL, `time` TEXT NOT NULL, `status` TEXT NOT NULL, `totalPrice` REAL NOT NULL, `notes` TEXT, `paymentMethod` TEXT, `cardNumber` TEXT, `cardExpiry` TEXT, `cardCvv` TEXT, `isPaid` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -221,6 +221,12 @@
           {
             "fieldPath": "providerName",
             "columnName": "providerName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "providerAddress",
+            "columnName": "providerAddress",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -267,6 +273,36 @@
             "notNull": false
           },
           {
+            "fieldPath": "paymentMethod",
+            "columnName": "paymentMethod",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cardNumber",
+            "columnName": "cardNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cardExpiry",
+            "columnName": "cardExpiry",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cardCvv",
+            "columnName": "cardCvv",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isPaid",
+            "columnName": "isPaid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "createdAt",
             "columnName": "createdAt",
             "affinity": "INTEGER",
@@ -286,7 +322,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4eaa10b1b529d85927eedd0f5c80f8d8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '86f011f03c5f2c7c943c1d642d2bde5a')"
     ]
   }
 }
