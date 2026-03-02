@@ -1,4 +1,4 @@
-package dev.pastukhov.booking.presentation.ui.screens
+package dev.pastukhov.booking.presentation.ui.screens.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,8 +41,8 @@ import dev.pastukhov.booking.R
  */
 @Composable
 fun LoginScreen(
+    modifier: Modifier = Modifier,
     onLoginSuccess: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }

@@ -12,18 +12,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import dev.pastukhov.booking.presentation.ui.screens.home.HomeScreen
-import dev.pastukhov.booking.presentation.ui.screens.LoginScreen
 import dev.pastukhov.booking.presentation.ui.screens.ProviderDetailScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingConfirmationScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingConfirmationViewModel
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingSuccessScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.PaymentScreen
-import dev.pastukhov.booking.presentation.viewmodel.PaymentViewModel
 import dev.pastukhov.booking.presentation.ui.screens.booking.SelectDateTimeScreen
-import dev.pastukhov.booking.presentation.viewmodel.SelectDateTimeViewModel
+import dev.pastukhov.booking.presentation.ui.screens.home.HomeScreen
+import dev.pastukhov.booking.presentation.ui.screens.login.LoginScreen
 import dev.pastukhov.booking.presentation.ui.screens.profile.ProfileScreen
 import dev.pastukhov.booking.presentation.ui.screens.search.SearchScreen
+import dev.pastukhov.booking.presentation.viewmodel.PaymentViewModel
+import dev.pastukhov.booking.presentation.viewmodel.SelectDateTimeViewModel
 
 /**
  * Main Navigation Host for the app.
@@ -115,11 +115,8 @@ fun BookingNavHost(
                 arguments = listOf(
                     navArgument("providerId") { type = NavType.StringType }
                 )
-            ) { backStackEntry ->
-                val providerId =
-                    backStackEntry.arguments?.getString("providerId") ?: return@composable
+            ) { _ ->
                 ProviderDetailScreen(
-                    providerId = providerId,
                     onBookingClick = { providerId, serviceId ->
                         navController.navigate(
                             Screen.SelectDateTime.createRoute(

@@ -53,7 +53,6 @@ import dev.pastukhov.booking.presentation.viewmodel.ProviderDetailViewModel
  */
 @Composable
 fun ProviderDetailScreen(
-    providerId: String,
     onBookingClick: (String, String) -> Unit,
     onBackClick: () -> Unit,
     viewModel: ProviderDetailViewModel = hiltViewModel()
@@ -114,14 +113,14 @@ private fun ProviderDetailContent(
 
             uiState.error != null && uiState.provider == null -> {
                 ErrorState(
-                    message = uiState.error ?: "",
+                    message = uiState.error,
                     onRetry = onRetry,
                     modifier = Modifier.padding(paddingValues)
                 )
             }
 
             uiState.provider != null -> {
-                val provider = uiState.provider!!
+                val provider = uiState.provider
 
                 Box(modifier = Modifier
                     .fillMaxSize()

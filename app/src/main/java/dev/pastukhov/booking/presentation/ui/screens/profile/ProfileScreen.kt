@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.ChevronRight
@@ -21,7 +22,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Payment
@@ -65,10 +65,10 @@ import dev.pastukhov.booking.presentation.viewmodel.ProfileViewModel
  */
 @Composable
 fun ProfileScreen(
+    modifier: Modifier = Modifier,
     onLogout: () -> Unit,
     onNavigateToBookings: () -> Unit = {},
-    modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -91,7 +91,7 @@ fun ProfileScreen(
 
 @Composable
 fun ProfileScreenContent(
-    user: User?,
+    user: User,
     language: AppLanguage,
     theme: AppTheme,
     notificationsEnabled: Boolean,
@@ -142,17 +142,17 @@ fun ProfileScreenContent(
 
         // Settings Section
         SectionTitle(stringResource(R.string.settings_title))
-        
+
         LanguageSetting(
             currentLanguage = language,
             onLanguageChange = onLanguageChange
         )
-        
+
         ThemeSetting(
             currentTheme = theme,
             onThemeChange = onThemeChange
         )
-        
+
         NotificationsSetting(
             enabled = notificationsEnabled,
             onToggle = onNotificationsToggle
@@ -170,7 +170,7 @@ fun ProfileScreenContent(
                 containerColor = MaterialTheme.colorScheme.error
             )
         ) {
-            Icon(Icons.Default.Logout, contentDescription = null)
+            Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
             Text(stringResource(R.string.logout))
         }
@@ -181,7 +181,7 @@ fun ProfileScreenContent(
 
 @Composable
 private fun ProfileHeader(
-    user: dev.pastukhov.booking.domain.model.User?,
+    user: User,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -193,7 +193,7 @@ private fun ProfileHeader(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
-                model = user?.avatarUrl,
+                model = user.avatarUrl,
                 contentDescription = null,
                 modifier = Modifier
                     .size(80.dp)
@@ -204,13 +204,13 @@ private fun ProfileHeader(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = user?.name ?: "",
+                text = user.name,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
 
             Text(
-                text = user?.email ?: "",
+                text = user.email,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
