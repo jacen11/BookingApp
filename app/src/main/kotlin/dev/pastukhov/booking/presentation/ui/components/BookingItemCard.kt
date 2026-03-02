@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.domain.model.BookingStatus
-import dev.pastukhov.booking.presentation.viewmodel.BookingTab
+import dev.pastukhov.booking.presentation.model.BookingTab
 import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
 import java.util.Locale

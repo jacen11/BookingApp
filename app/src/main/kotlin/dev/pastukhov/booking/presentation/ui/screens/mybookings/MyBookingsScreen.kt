@@ -49,9 +49,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.Booking
+import dev.pastukhov.booking.presentation.model.BookingTab
+import dev.pastukhov.booking.presentation.model.MyBookingsEvent
 import dev.pastukhov.booking.presentation.ui.components.BookingItemCard
-import dev.pastukhov.booking.presentation.viewmodel.BookingTab
-import dev.pastukhov.booking.presentation.viewmodel.MyBookingsEvent
 import dev.pastukhov.booking.presentation.viewmodel.MyBookingsViewModel
 
 /**
