@@ -35,6 +35,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.pastukhov.booking.R
+import dev.pastukhov.booking.data.repository.UserSettingsRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Login screen for user authentication.
@@ -43,10 +47,12 @@ import dev.pastukhov.booking.R
 fun LoginScreen(
     modifier: Modifier = Modifier,
     onLoginSuccess: () -> Unit,
+    userSettingsRepository: UserSettingsRepository? = null,
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    val scope = CoroutineScope(Dispatchers.IO)
 
     Column(
         modifier = modifier
@@ -127,7 +133,17 @@ fun LoginScreen(
         // Login button
         Button(
             onClick = {
-                // For demo: accept any login
+                //todo transfer to viewModel
+                // Save auth token for persistent login
+                userSettingsRepository?.let { repository ->
+                    scope.launch {
+                        // Generate mock token and save to DataStore
+                        repository.saveAuthToken(
+                            token = "mock_token_${System.currentTimeMillis()}",
+                            userId = email.ifEmpty { "user_1" }
+                        )
+                    }
+                }
                 onLoginSuccess()
             },
             modifier = Modifier

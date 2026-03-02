@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import dev.pastukhov.booking.data.repository.UserSettingsRepository
 import dev.pastukhov.booking.presentation.model.PaymentEvent
 import dev.pastukhov.booking.presentation.ui.screens.ProviderDetailScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingConfirmationScreen
@@ -24,6 +25,7 @@ import dev.pastukhov.booking.presentation.ui.screens.login.LoginScreen
 import dev.pastukhov.booking.presentation.ui.screens.mybookings.MyBookingsScreen
 import dev.pastukhov.booking.presentation.ui.screens.profile.ProfileScreen
 import dev.pastukhov.booking.presentation.ui.screens.search.SearchScreen
+import dev.pastukhov.booking.presentation.ui.screens.splash.SplashScreen
 import dev.pastukhov.booking.presentation.viewmodel.PaymentViewModel
 import dev.pastukhov.booking.presentation.viewmodel.SelectDateTimeViewModel
 
@@ -35,7 +37,8 @@ import dev.pastukhov.booking.presentation.viewmodel.SelectDateTimeViewModel
 fun BookingNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    startDestination: String = Screen.Login.route
+    userSettingsRepository: UserSettingsRepository,
+    startDestination: String = Screen.Splash.route
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -63,9 +66,27 @@ fun BookingNavHost(
             startDestination = startDestination,
             modifier = modifier.padding(paddingValues)
         ) {
+            // Splash Screen
+            composable(route = Screen.Splash.route) {
+                SplashScreen(
+                    onNavigateToLogin = {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.Splash.route) { inclusive = true }
+                        }
+                    },
+                    onNavigateToHome = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Splash.route) { inclusive = true }
+                        }
+                    }
+                )
+            }
+
             // Login Screen
             composable(route = Screen.Login.route) {
                 LoginScreen(
+                    //todo transfer to viewModel
+                    userSettingsRepository = userSettingsRepository,
                     onLoginSuccess = {
                         navController.navigate(Screen.Home.route) {
                             popUpTo(Screen.Login.route) { inclusive = true }

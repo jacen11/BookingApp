@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Splash Screen Logo Vector Drawable
+    Recommended: Use Vector Drawable for optimal scaling on all screen densities.
+    This is a placeholder logo - replace with your actual brand logo.
+    For portfolio purposes, this creates a simple booking/calendar icon.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background Circle -->
+    <path
+        android:fillColor="#6650a4"
+        android:pathData="M60,60m-55,0a55,55 0,1 1,110 0a55,55 0,1 1,-110 0" />
+
+    <!-- Calendar/Booking Icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M35,30h50c2.8,0 5,2.2 5,5v50c0,2.8 -2.2,5 -5,5h-50c-2.8,0 -5,-2.2 -5,-5v-50c0,-2.8 2.2,-5 5,-5z" />
+
+    <!-- Calendar Header -->
+    <path
+        android:fillColor="#D0BCFF"
+        android:pathData="M35,35h50c2.8,0 5,2.2 5,5v10c0,2.8 -2.2,5 -5,5h-50c-2.8,0 -5,-2.2 -5,-5v-10c0,-2.8 2.2,-5 5,-5z" />
+
+    <!-- Calendar Hooks -->
+    <path
+        android:fillColor="#6650a4"
+        android:pathData="M42,28v7M78,28v7"
+        android:strokeWidth="3"
+        android:strokeColor="#6650a4" />
+
+    <!-- Checkmark/Booking Mark -->
+    <path
+        android:fillColor="#6650a4"
+        android:pathData="M50,60l8,8l15,-15"
+        android:strokeWidth="4"
+        android:strokeColor="#6650a4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Time indicator -->
+    <path
+        android:fillColor="#6650a4"
+        android:pathData="M55,75m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+
+</vector>

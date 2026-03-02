@@ -31,6 +31,8 @@ class UserSettingsRepository @Inject constructor(
         val LANGUAGE = stringPreferencesKey("language")
         val THEME = stringPreferencesKey("theme")
         val NOTIFICATIONS = booleanPreferencesKey("notifications")
+        val AUTH_TOKEN = stringPreferencesKey("auth_token")
+        val USER_ID = stringPreferencesKey("user_id")
     }
 
     val userSettings: Flow<UserSettings> = context.dataStore.data.map { preferences ->
@@ -75,5 +77,45 @@ class UserSettingsRepository @Inject constructor(
 
     suspend fun clearSettings() {
         context.dataStore.edit { it.clear() }
+    }
+
+    /**
+     * Save authentication token for splash screen auth check.
+     */
+    suspend fun saveAuthToken(token: String, userId: String) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.AUTH_TOKEN] = token
+            preferences[PreferencesKeys.USER_ID] = userId
+        }
+    }
+
+    /**
+     * Check if user has valid auth token.
+     * Returns Flow to observe changes.
+     */
+    fun isLoggedIn(): Flow<Boolean> = context.dataStore.data.map { preferences ->
+        val token = preferences[PreferencesKeys.AUTH_TOKEN]
+        !token.isNullOrEmpty()
+    }
+
+    /**
+     * Get stored auth token synchronously for initial splash check.
+     */
+    suspend fun getAuthToken(): String? {
+        var token: String? = null
+        context.dataStore.data.collect { preferences ->
+            token = preferences[PreferencesKeys.AUTH_TOKEN]
+        }
+        return token
+    }
+
+    /**
+     * Clear authentication data (logout).
+     */
+    suspend fun clearAuthData() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(PreferencesKeys.AUTH_TOKEN)
+            preferences.remove(PreferencesKeys.USER_ID)
+        }
     }
 }

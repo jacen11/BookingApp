@@ -19,7 +19,6 @@ import dev.pastukhov.booking.data.repository.UserSettingsRepository
 import dev.pastukhov.booking.domain.model.AppTheme
 import dev.pastukhov.booking.domain.model.UserSettings
 import dev.pastukhov.booking.presentation.navigation.BookingNavHost
-import dev.pastukhov.booking.presentation.navigation.Screen
 import dev.pastukhov.booking.ui.theme.BookingAppTheme
 import javax.inject.Inject
 
@@ -61,7 +60,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     BookingNavHost(
                         navController = navController,
-                        startDestination = Screen.Login.route
+                        userSettingsRepository = settingsRepository
                     )
                 }
             }

@@ -1,6 +1,7 @@
 <resources>
     <!-- App name -->
     <string name="app_name">Booking App</string>
+    <string name="splash_tagline">Tu belleza, tu tiempo</string>
 
     <!-- Navigation -->
     <string name="nav_home">Inicio</string>
