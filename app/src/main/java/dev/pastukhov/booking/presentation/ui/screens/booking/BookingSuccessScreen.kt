@@ -49,9 +49,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.pastukhov.booking.R
+import dev.pastukhov.booking.domain.model.Booking
+import dev.pastukhov.booking.domain.model.BookingStatus
 import kotlinx.coroutines.delay
+import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -215,8 +220,8 @@ private fun BookingDetailsCard(
     bookingNumber: String,
     providerName: String,
     serviceName: String,
-    date: java.time.LocalDate,
-    time: java.time.LocalTime,
+    date: LocalDate,
+    time: LocalTime,
     address: String,
     totalPrice: Double
 ) {
@@ -329,12 +334,49 @@ private fun BookingDetailsCard(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "$$totalPrice",
+                    text = "$totalPrice",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
             }
         }
+    }
+}
+
+// Previews
+
+@Preview(showBackground = true)
+@Composable
+fun BookingSuccessScreenPreview() {
+    val mockBooking = Booking(
+        id = "abc123def456",
+        userId = "user1",
+        providerId = "provider1",
+        providerName = "Glamour Hair Studio",
+        providerAddress = "123 Style St, Fashion City",
+        serviceId = "service1",
+        serviceName = "Women's Haircut & Style",
+        date = LocalDate.now().plusDays(3),
+        time = LocalTime.of(14, 30),
+        status = BookingStatus.CONFIRMED,
+        totalPrice = 75.0,
+        notes = null,
+        paymentMethod = dev.pastukhov.booking.domain.model.PaymentMethod.CARD,
+        cardNumber = "4111111111111111",
+        cardExpiry = "12/25",
+        isPaid = true
+    )
+
+    MaterialTheme {
+        BookingDetailsCard(
+            bookingNumber = mockBooking.id.take(8).uppercase(),
+            providerName = mockBooking.providerName,
+            serviceName = mockBooking.serviceName,
+            date = mockBooking.date,
+            time = mockBooking.time,
+            address = mockBooking.providerAddress,
+            totalPrice = mockBooking.totalPrice
+        )
     }
 }
