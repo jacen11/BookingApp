@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,12 +16,12 @@ import androidx.navigation.navArgument
 import dev.pastukhov.booking.presentation.ui.screens.HomeScreen
 import dev.pastukhov.booking.presentation.ui.screens.LoginScreen
 import dev.pastukhov.booking.presentation.ui.screens.ProviderDetailScreen
-import dev.pastukhov.booking.presentation.ui.screens.profile.ProfileScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingConfirmationScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingSuccessScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingViewModel
 import dev.pastukhov.booking.presentation.ui.screens.booking.PaymentScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.SelectDateTimeScreen
+import dev.pastukhov.booking.presentation.ui.screens.profile.ProfileScreen
 import dev.pastukhov.booking.presentation.ui.screens.search.SearchScreen
 
 /**

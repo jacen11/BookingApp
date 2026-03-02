@@ -2,7 +2,6 @@ package dev.pastukhov.booking.data.repository
 
 import dev.pastukhov.booking.data.local.dao.BookingDao
 import dev.pastukhov.booking.data.mapper.toDomain
-import dev.pastukhov.booking.data.mapper.toDto
 import dev.pastukhov.booking.data.mapper.toEntity
 import dev.pastukhov.booking.data.mock.MockData
 import dev.pastukhov.booking.data.remote.api.BookingApi
@@ -11,7 +10,6 @@ import dev.pastukhov.booking.domain.model.BookingStatus
 import dev.pastukhov.booking.domain.model.TimeSlot
 import dev.pastukhov.booking.domain.repository.BookingRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.time.LocalTime

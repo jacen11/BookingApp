@@ -10,8 +10,6 @@ import dev.pastukhov.booking.data.mock.MockData
 import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.domain.model.BookingStatus
 import dev.pastukhov.booking.domain.model.PaymentMethod
-import dev.pastukhov.booking.domain.model.Provider
-import dev.pastukhov.booking.domain.model.Service
 import dev.pastukhov.booking.domain.model.TimeSlot
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

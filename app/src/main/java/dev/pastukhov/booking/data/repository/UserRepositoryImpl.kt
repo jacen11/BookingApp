@@ -2,15 +2,12 @@ package dev.pastukhov.booking.data.repository
 
 import dev.pastukhov.booking.data.local.dao.UserDao
 import dev.pastukhov.booking.data.mapper.toDomain
-import dev.pastukhov.booking.data.mapper.toDto
 import dev.pastukhov.booking.data.mapper.toEntity
 import dev.pastukhov.booking.data.mock.MockData
 import dev.pastukhov.booking.data.remote.api.BookingApi
-import dev.pastukhov.booking.data.remote.api.LoginRequest
 import dev.pastukhov.booking.domain.model.User
 import dev.pastukhov.booking.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
