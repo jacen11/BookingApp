@@ -54,6 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.domain.model.BookingStatus
+import dev.pastukhov.booking.presentation.viewmodel.BookingSuccessViewModel
 import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.LocalTime

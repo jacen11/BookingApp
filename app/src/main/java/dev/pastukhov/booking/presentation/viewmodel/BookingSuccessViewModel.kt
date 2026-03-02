@@ -1,9 +1,9 @@
-package dev.pastukhov.booking.presentation.ui.screens.booking
+package dev.pastukhov.booking.presentation.viewmodel
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pastukhov.booking.data.mapper.toDomain
 import dev.pastukhov.booking.data.mock.MockData
-import dev.pastukhov.booking.presentation.viewmodel.BaseViewModel
+import dev.pastukhov.booking.presentation.ui.screens.booking.BookingSuccessUiState
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject

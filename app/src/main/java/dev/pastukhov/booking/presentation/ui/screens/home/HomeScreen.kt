@@ -1,4 +1,4 @@
-package dev.pastukhov.booking.presentation.ui.screens
+package dev.pastukhov.booking.presentation.ui.screens.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

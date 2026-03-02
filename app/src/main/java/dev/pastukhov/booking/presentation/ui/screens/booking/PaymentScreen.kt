@@ -33,6 +33,7 @@ import dev.pastukhov.booking.presentation.ui.screens.booking.component.CardDetai
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.PaymentMethodsSection
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.SecurityNotice
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.TotalSection
+import dev.pastukhov.booking.presentation.viewmodel.PaymentViewModel
 
 /**
  * Screen 3: Payment

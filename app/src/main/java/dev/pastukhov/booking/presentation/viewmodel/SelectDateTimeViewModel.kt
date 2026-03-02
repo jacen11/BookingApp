@@ -1,10 +1,11 @@
-package dev.pastukhov.booking.presentation.ui.screens.booking
+package dev.pastukhov.booking.presentation.viewmodel
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pastukhov.booking.data.mapper.toDomain
 import dev.pastukhov.booking.data.mock.MockData
 import dev.pastukhov.booking.domain.model.TimeSlot
-import dev.pastukhov.booking.presentation.viewmodel.BaseViewModel
+import dev.pastukhov.booking.presentation.ui.screens.booking.SelectDateTimeUiState
+import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
@@ -47,7 +48,7 @@ class SelectDateTimeViewModel @Inject constructor() : BaseViewModel<SelectDateTi
         ) {
             updateState { copy(isLoadingSlots = true) }
 
-            kotlinx.coroutines.delay(500)
+            delay(500)
 
             val slots = generateTimeSlots(date)
 

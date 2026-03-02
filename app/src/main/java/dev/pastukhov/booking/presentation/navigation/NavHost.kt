@@ -12,16 +12,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import dev.pastukhov.booking.presentation.ui.screens.HomeScreen
+import dev.pastukhov.booking.presentation.ui.screens.home.HomeScreen
 import dev.pastukhov.booking.presentation.ui.screens.LoginScreen
 import dev.pastukhov.booking.presentation.ui.screens.ProviderDetailScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingConfirmationScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingConfirmationViewModel
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingSuccessScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.PaymentScreen
-import dev.pastukhov.booking.presentation.ui.screens.booking.PaymentViewModel
+import dev.pastukhov.booking.presentation.viewmodel.PaymentViewModel
 import dev.pastukhov.booking.presentation.ui.screens.booking.SelectDateTimeScreen
-import dev.pastukhov.booking.presentation.ui.screens.booking.SelectDateTimeViewModel
+import dev.pastukhov.booking.presentation.viewmodel.SelectDateTimeViewModel
 import dev.pastukhov.booking.presentation.ui.screens.profile.ProfileScreen
 import dev.pastukhov.booking.presentation.ui.screens.search.SearchScreen
 

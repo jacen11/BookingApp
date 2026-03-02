@@ -1,4 +1,4 @@
-package dev.pastukhov.booking.presentation.ui.screens.booking
+package dev.pastukhov.booking.presentation.viewmodel
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pastukhov.booking.data.local.dao.BookingDao
@@ -8,7 +8,7 @@ import dev.pastukhov.booking.data.mock.MockData
 import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.domain.model.BookingStatus
 import dev.pastukhov.booking.domain.model.PaymentMethod
-import dev.pastukhov.booking.presentation.viewmodel.BaseViewModel
+import dev.pastukhov.booking.presentation.ui.screens.booking.PaymentUiState
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.UUID

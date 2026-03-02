@@ -1,4 +1,4 @@
-package dev.pastukhov.booking.presentation.ui.screens.booking
+package dev.pastukhov.booking.presentation.viewmodel
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pastukhov.booking.data.local.dao.BookingDao
@@ -9,7 +9,9 @@ import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.domain.model.BookingStatus
 import dev.pastukhov.booking.domain.model.PaymentMethod
 import dev.pastukhov.booking.domain.model.TimeSlot
-import dev.pastukhov.booking.presentation.viewmodel.BaseViewModel
+import dev.pastukhov.booking.presentation.ui.screens.booking.BookingStep
+import dev.pastukhov.booking.presentation.ui.screens.booking.BookingUiState
+import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.UUID
@@ -60,7 +62,7 @@ class BookingViewModel @Inject constructor(
             updateState { copy(isLoadingSlots = true) }
 
             // Simulate network delay
-            kotlinx.coroutines.delay(500)
+            delay(500)
 
             // Generate mock time slots (9:00 - 18:00, 30-minute intervals)
             val slots = generateTimeSlots(date)

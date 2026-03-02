@@ -58,6 +58,7 @@ import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.AppLanguage
 import dev.pastukhov.booking.domain.model.AppTheme
 import dev.pastukhov.booking.domain.model.User
+import dev.pastukhov.booking.presentation.viewmodel.ProfileViewModel
 
 /**
  * Profile screen with user info and settings.

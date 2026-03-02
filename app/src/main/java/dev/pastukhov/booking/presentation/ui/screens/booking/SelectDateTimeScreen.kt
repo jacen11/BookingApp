@@ -41,6 +41,7 @@ import dev.pastukhov.booking.domain.model.TimeSlot
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.DateSelectionSection
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.ServiceInfoCard
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.TimeSelectionSection
+import dev.pastukhov.booking.presentation.viewmodel.SelectDateTimeViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime

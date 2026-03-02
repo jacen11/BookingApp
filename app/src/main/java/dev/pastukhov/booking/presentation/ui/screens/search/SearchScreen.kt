@@ -43,6 +43,7 @@ import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.Provider
 import dev.pastukhov.booking.domain.model.ProviderCategory
 import dev.pastukhov.booking.presentation.ui.components.ProviderCard
+import dev.pastukhov.booking.presentation.viewmodel.SearchViewModel
 
 /**
  * Search screen with list/map toggle and category filters.

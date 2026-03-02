@@ -1,10 +1,11 @@
-package dev.pastukhov.booking.presentation.ui.screens.search
+package dev.pastukhov.booking.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pastukhov.booking.domain.model.ProviderCategory
 import dev.pastukhov.booking.domain.repository.ProviderRepository
+import dev.pastukhov.booking.presentation.ui.screens.search.SearchUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

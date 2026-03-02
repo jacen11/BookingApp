@@ -1,4 +1,4 @@
-package dev.pastukhov.booking.presentation.ui.screens.profile
+package dev.pastukhov.booking.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,6 +7,7 @@ import dev.pastukhov.booking.data.repository.UserSettingsRepository
 import dev.pastukhov.booking.domain.model.AppLanguage
 import dev.pastukhov.booking.domain.model.AppTheme
 import dev.pastukhov.booking.domain.repository.UserRepository
+import dev.pastukhov.booking.presentation.ui.screens.profile.ProfileUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
