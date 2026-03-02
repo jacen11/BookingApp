@@ -52,9 +52,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.pastukhov.booking.R
+import dev.pastukhov.booking.domain.model.Provider
+import dev.pastukhov.booking.domain.model.ProviderCategory
+import dev.pastukhov.booking.domain.model.Service
 import dev.pastukhov.booking.domain.model.TimeSlot
 import java.time.Instant
 import java.time.LocalDate
@@ -84,6 +88,30 @@ fun SelectDateTimeScreen(
         viewModel.initializeBooking(providerId, serviceId)
     }
 
+    SelectDateTimeScreenContent(
+        uiState = uiState,
+        showDatePicker = showDatePicker,
+        onShowDatePickerChange = { showDatePicker = it },
+        onBack = onBack,
+        onNext = onNext,
+        onDateSelected = { viewModel.selectDate(it) },
+        onTimeSelected = { viewModel.selectTime(it) },
+        onProceedToNextStep = { viewModel.proceedToNextStep() }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SelectDateTimeScreenContent(
+    uiState: BookingUiState,
+    showDatePicker: Boolean,
+    onShowDatePickerChange: (Boolean) -> Unit,
+    onBack: () -> Unit,
+    onNext: () -> Unit,
+    onDateSelected: (LocalDate) -> Unit,
+    onTimeSelected: (LocalTime) -> Unit,
+    onProceedToNextStep: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -107,8 +135,8 @@ fun SelectDateTimeScreen(
         ) {
             // Service Info Card
             ServiceInfoCard(
-                providerName = uiState.provider?.name ?: providerId,
-                serviceName = uiState.service?.name ?: serviceId,
+                providerName = uiState.provider?.name.orEmpty(),
+                serviceName = uiState.service?.name.orEmpty(),
                 servicePrice = uiState.service?.price ?: 0.0
             )
 
@@ -117,7 +145,7 @@ fun SelectDateTimeScreen(
             // Date Selection Section
             DateSelectionSection(
                 selectedDate = uiState.selectedDate,
-                onSelectDate = { showDatePicker = true }
+                onSelectDate = { onShowDatePickerChange(true) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -127,7 +155,7 @@ fun SelectDateTimeScreen(
                 selectedTime = uiState.selectedTime,
                 timeSlots = uiState.availableTimeSlots,
                 isLoading = uiState.isLoadingSlots,
-                onSelectTime = { viewModel.selectTime(it) }
+                onSelectTime = onTimeSelected
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -135,7 +163,7 @@ fun SelectDateTimeScreen(
             // Next Button
             Button(
                 onClick = {
-                    viewModel.proceedToNextStep()
+                    onProceedToNextStep()
                     onNext()
                 },
                 modifier = Modifier
@@ -160,7 +188,7 @@ fun SelectDateTimeScreen(
         )
 
         DatePickerDialog(
-            onDismissRequest = { showDatePicker = false },
+            onDismissRequest = { onShowDatePickerChange(false) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -168,16 +196,16 @@ fun SelectDateTimeScreen(
                             val date = Instant.ofEpochMilli(millis)
                                 .atZone(ZoneId.systemDefault())
                                 .toLocalDate()
-                            viewModel.selectDate(date)
+                            onDateSelected(date)
                         }
-                        showDatePicker = false
+                        onShowDatePickerChange(false)
                     }
                 ) {
                     Text(stringResource(R.string.confirm))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) {
+                TextButton(onClick = { onShowDatePickerChange(false) }) {
                     Text(stringResource(R.string.cancel))
                 }
             }
@@ -186,6 +214,7 @@ fun SelectDateTimeScreen(
         }
     }
 }
+
 
 @Composable
 private fun ServiceInfoCard(
@@ -402,4 +431,155 @@ private fun TimeSlotItem(
             }
         }
     }
+}
+
+// Previews
+
+@Preview(showBackground = true)
+@Composable
+fun SelectDateTimeScreenPreview() {
+    val mockProvider = Provider(
+        id = "p1",
+        name = "Glamour Hair Studio",
+        description = "Top-notch hair styling and care.",
+        category = ProviderCategory.SALON,
+        address = "123 Style St, Fashion City",
+        city = "Fashion City",
+        rating = 4.8f,
+        reviewCount = 215,
+        phone = "555-0101",
+        workingHours = "9:00 - 18:00"
+    )
+
+    val mockService = Service(
+        id = "s1",
+        providerId = "p1",
+        name = "Women's Haircut & Style",
+        description = "A full haircut and styling session.",
+        price = 75.0,
+        duration = 60
+    )
+
+    val timeSlots = listOf(
+        TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 0), isAvailable = true),
+        TimeSlot(LocalTime.of(10, 0), LocalTime.of(11, 0), isAvailable = true),
+        TimeSlot(LocalTime.of(11, 0), LocalTime.of(12, 0), isAvailable = false),
+        TimeSlot(LocalTime.of(12, 0), LocalTime.of(13, 0), isAvailable = true),
+        TimeSlot(LocalTime.of(13, 0), LocalTime.of(14, 0), isAvailable = true),
+    )
+
+    val uiState = BookingUiState(
+        provider = mockProvider,
+        service = mockService,
+        selectedDate = LocalDate.now(),
+        selectedTime = LocalTime.of(10, 0),
+        availableTimeSlots = timeSlots,
+     )
+
+    SelectDateTimeScreenContent(
+        uiState = uiState,
+        showDatePicker = false,
+        onShowDatePickerChange = {},
+        onBack = {},
+        onNext = {},
+        onDateSelected = {},
+        onTimeSelected = {},
+        onProceedToNextStep = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ServiceInfoCardPreview() {
+    ServiceInfoCard(
+        providerName = "Glamour Hair Studio",
+        serviceName = "Women's Haircut & Style",
+        servicePrice = 75.0
+    )
+}
+
+@Preview(name = "Date Not Selected", showBackground = true)
+@Composable
+private fun DateSelectionSectionPreview_NotSelected() {
+    DateSelectionSection(
+        selectedDate = null,
+        onSelectDate = {}
+    )
+}
+
+@Preview(name = "Date Selected", showBackground = true)
+@Composable
+private fun DateSelectionSectionPreview_Selected() {
+    DateSelectionSection(
+        selectedDate = LocalDate.now(),
+        onSelectDate = {}
+    )
+}
+
+@Preview(name = "Time Loading", showBackground = true)
+@Composable
+private fun TimeSelectionSectionPreview_Loading() {
+    TimeSelectionSection(
+        selectedTime = null,
+        timeSlots = emptyList(),
+        isLoading = true,
+        onSelectTime = {}
+    )
+}
+
+@Preview(name = "Time No Slots", showBackground = true)
+@Composable
+private fun TimeSelectionSectionPreview_NoSlots() {
+    TimeSelectionSection(
+        selectedTime = null,
+        timeSlots = emptyList(),
+        isLoading = false,
+        onSelectTime = {}
+    )
+}
+
+@Preview(name = "Time With Slots", showBackground = true)
+@Composable
+private fun TimeSelectionSectionPreview_WithSlots() {
+    val timeSlots = listOf(
+        TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 0), isAvailable = true),
+        TimeSlot(LocalTime.of(10, 0), LocalTime.of(11, 0), isAvailable = true),
+        TimeSlot(LocalTime.of(11, 0), LocalTime.of(12, 0), isAvailable = false),
+    )
+    TimeSelectionSection(
+        selectedTime = LocalTime.of(10, 0),
+        timeSlots = timeSlots,
+        isLoading = false,
+        onSelectTime = {}
+    )
+}
+
+@Preview(name = "Time Slot Available")
+@Composable
+private fun TimeSlotItemPreview_Available() {
+    TimeSlotItem(
+        timeSlot = TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 0), true),
+        isSelected = false,
+        onClick = {}
+    )
+}
+
+@Preview(name = "Time Slot Selected")
+@Composable
+private fun TimeSlotItemPreview_Selected() {
+    TimeSlotItem(
+        timeSlot = TimeSlot(LocalTime.of(10, 0), LocalTime.of(11, 0), true),
+        isSelected = true,
+        onClick = {}
+    )
+}
+
+@Preview(name = "Time Slot Unavailable")
+@Composable
+private fun TimeSlotItemPreview_Unavailable() {
+    TimeSlotItem(
+        timeSlot = TimeSlot(LocalTime.of(11, 0), LocalTime.of(12, 0), false),
+        isSelected = false,
+        onClick = {}
+    )
 }
