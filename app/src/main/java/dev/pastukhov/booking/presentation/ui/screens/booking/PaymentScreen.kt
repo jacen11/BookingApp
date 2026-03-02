@@ -43,7 +43,7 @@ import dev.pastukhov.booking.presentation.ui.screens.booking.component.TotalSect
 fun PaymentScreen(
     onBack: () -> Unit,
     onComplete: () -> Unit,
-    viewModel: BookingViewModel = hiltViewModel()
+    viewModel: PaymentViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsState()
 
@@ -55,8 +55,7 @@ fun PaymentScreen(
         onCardExpiryChange = { viewModel.updateCardExpiry(it) },
         onCardCvvChange = { viewModel.updateCardCvv(it) },
         onPay = {
-            viewModel.proceedToNextStep()
-            onComplete()
+            viewModel.completeBooking { onComplete() }
         }
     )
 }
@@ -67,7 +66,7 @@ fun PaymentScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PaymentContent(
-    uiState: BookingUiState,
+    uiState: PaymentUiState,
     onBack: () -> Unit,
     onSelectPaymentMethod: (PaymentMethod) -> Unit,
     onCardNumberChange: (String) -> Unit,
@@ -164,8 +163,7 @@ fun PaymentScreenPreview() {
         duration = 60
     )
 
-    val mockUiState = BookingUiState(
-        currentStep = BookingStep.PAYMENT,
+    val mockUiState = PaymentUiState(
         service = mockService,
         selectedPaymentMethod = PaymentMethod.CARD,
         cardNumber = "4532015112830366",

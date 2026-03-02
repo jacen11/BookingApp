@@ -38,15 +38,21 @@ sealed class Screen(val route: String) {
             "booking/$providerId/datetime/$serviceId"
     }
 
-    data object ConfirmBooking : Screen("booking/confirm") {
+    data object ConfirmBooking : Screen("booking/confirm/{providerId}/{serviceId}/{date}/{time}") {
         const val ARG_PROVIDER_ID = "providerId"
         const val ARG_SERVICE_ID = "serviceId"
         const val ARG_DATE = "date"
         const val ARG_TIME = "time"
+
+        fun createRoute(providerId: String, serviceId: String, date: String, time: String) =
+            "booking/confirm/$providerId/$serviceId/$date/$time"
     }
 
     // Payment screen
-    data object Payment : Screen("booking/payment")
+    data object Payment : Screen("booking/payment/{providerId}/{serviceId}/{date}/{time}") {
+        fun createRoute(providerId: String, serviceId: String, date: String, time: String) =
+            "booking/payment/$providerId/$serviceId/$date/$time"
+    }
 
     // Booking success screen
     data object BookingSuccess : Screen("booking/success")

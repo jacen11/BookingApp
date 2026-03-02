@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -17,10 +16,12 @@ import dev.pastukhov.booking.presentation.ui.screens.HomeScreen
 import dev.pastukhov.booking.presentation.ui.screens.LoginScreen
 import dev.pastukhov.booking.presentation.ui.screens.ProviderDetailScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingConfirmationScreen
+import dev.pastukhov.booking.presentation.ui.screens.booking.BookingConfirmationViewModel
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingSuccessScreen
-import dev.pastukhov.booking.presentation.ui.screens.booking.BookingViewModel
 import dev.pastukhov.booking.presentation.ui.screens.booking.PaymentScreen
+import dev.pastukhov.booking.presentation.ui.screens.booking.PaymentViewModel
 import dev.pastukhov.booking.presentation.ui.screens.booking.SelectDateTimeScreen
+import dev.pastukhov.booking.presentation.ui.screens.booking.SelectDateTimeViewModel
 import dev.pastukhov.booking.presentation.ui.screens.profile.ProfileScreen
 import dev.pastukhov.booking.presentation.ui.screens.search.SearchScreen
 
@@ -115,11 +116,17 @@ fun BookingNavHost(
                     navArgument("providerId") { type = NavType.StringType }
                 )
             ) { backStackEntry ->
-                val providerId = backStackEntry.arguments?.getString("providerId") ?: return@composable
+                val providerId =
+                    backStackEntry.arguments?.getString("providerId") ?: return@composable
                 ProviderDetailScreen(
                     providerId = providerId,
                     onBookingClick = { providerId, serviceId ->
-                        navController.navigate(Screen.SelectDateTime.createRoute(providerId, serviceId))
+                        navController.navigate(
+                            Screen.SelectDateTime.createRoute(
+                                providerId,
+                                serviceId
+                            )
+                        )
                     },
                     onBackClick = { navController.popBackStack() }
                 )
@@ -132,7 +139,8 @@ fun BookingNavHost(
                     navArgument("providerId") { type = NavType.StringType }
                 )
             ) { backStackEntry ->
-                val providerId = backStackEntry.arguments?.getString("providerId") ?: return@composable
+                val providerId =
+                    backStackEntry.arguments?.getString("providerId") ?: return@composable
                 // TODO: Create SelectServiceScreen
             }
 
@@ -144,68 +152,116 @@ fun BookingNavHost(
                     navArgument("serviceId") { type = NavType.StringType }
                 )
             ) { backStackEntry ->
-                val providerId = backStackEntry.arguments?.getString("providerId") ?: return@composable
-                val serviceId = backStackEntry.arguments?.getString("serviceId") ?: return@composable
-                
-                val parentEntry = remember(backStackEntry) {
-                    navController.getBackStackEntry(Screen.SelectDateTime.route)
-                }
-                val bookingViewModel: BookingViewModel = hiltViewModel(parentEntry)
-                
+                val providerId =
+                    backStackEntry.arguments?.getString("providerId") ?: return@composable
+                val serviceId =
+                    backStackEntry.arguments?.getString("serviceId") ?: return@composable
+
+                val selectDateTimeViewModel: SelectDateTimeViewModel = hiltViewModel()
+
                 SelectDateTimeScreen(
                     providerId = providerId,
                     serviceId = serviceId,
                     onBack = { navController.popBackStack() },
-                    onNext = { navController.navigate(Screen.ConfirmBooking.route) },
-                    viewModel = bookingViewModel
+                    onNext = {
+                        val date = selectDateTimeViewModel.state.value.selectedDate
+                        val time = selectDateTimeViewModel.state.value.selectedTime
+                        if (date != null && time != null) {
+                            navController.navigate(
+                                Screen.ConfirmBooking.createRoute(
+                                    providerId = providerId,
+                                    serviceId = serviceId,
+                                    date = date.toString(),
+                                    time = time.toString()
+                                )
+                            )
+                        }
+                    },
+                    viewModel = selectDateTimeViewModel
                 )
             }
 
             // Confirm Booking Screen
             composable(
-                route = Screen.ConfirmBooking.route
+                route = Screen.ConfirmBooking.route,
+                arguments = listOf(
+                    navArgument("providerId") { type = NavType.StringType },
+                    navArgument("serviceId") { type = NavType.StringType },
+                    navArgument("date") { type = NavType.StringType },
+                    navArgument("time") { type = NavType.StringType }
+                )
             ) { backStackEntry ->
-                val parentEntry = remember(backStackEntry) {
-                    navController.getBackStackEntry(Screen.SelectDateTime.route)
-                }
-                val bookingViewModel: BookingViewModel = hiltViewModel(parentEntry)
-                
+                val providerId =
+                    backStackEntry.arguments?.getString("providerId") ?: return@composable
+                val serviceId =
+                    backStackEntry.arguments?.getString("serviceId") ?: return@composable
+                val date = backStackEntry.arguments?.getString("date") ?: return@composable
+                val time = backStackEntry.arguments?.getString("time") ?: return@composable
+
+                val viewModel: BookingConfirmationViewModel = hiltViewModel()
+                viewModel.initializeBooking(
+                    providerId = providerId,
+                    serviceId = serviceId,
+                    date = java.time.LocalDate.parse(date),
+                    time = java.time.LocalTime.parse(time)
+                )
+
                 BookingConfirmationScreen(
+                    providerId = providerId,
+                    serviceId = serviceId,
                     onBack = { navController.popBackStack() },
-                    onNext = { navController.navigate(Screen.Payment.route) },
-                    viewModel = bookingViewModel
+                    onNext = {
+                        navController.navigate(
+                            Screen.Payment.createRoute(
+                                providerId = providerId,
+                                serviceId = serviceId,
+                                date = date,
+                                time = time
+                            )
+                        )
+                    },
+                    viewModel = viewModel
                 )
             }
 
             // Payment Screen
             composable(
-                route = Screen.Payment.route
+                route = Screen.Payment.route,
+                arguments = listOf(
+                    navArgument("providerId") { type = NavType.StringType },
+                    navArgument("serviceId") { type = NavType.StringType },
+                    navArgument("date") { type = NavType.StringType },
+                    navArgument("time") { type = NavType.StringType }
+                )
             ) { backStackEntry ->
-                val parentEntry = remember(backStackEntry) {
-                    navController.getBackStackEntry(Screen.SelectDateTime.route)
-                }
-                val bookingViewModel: BookingViewModel = hiltViewModel(parentEntry)
-                
+                val providerId =
+                    backStackEntry.arguments?.getString("providerId") ?: return@composable
+                val serviceId =
+                    backStackEntry.arguments?.getString("serviceId") ?: return@composable
+                val date = backStackEntry.arguments?.getString("date") ?: return@composable
+                val time = backStackEntry.arguments?.getString("time") ?: return@composable
+
+                val viewModel: PaymentViewModel = hiltViewModel()
+                viewModel.initializePayment(
+                    providerId = providerId,
+                    serviceId = serviceId,
+                    date = java.time.LocalDate.parse(date),
+                    time = java.time.LocalTime.parse(time)
+                )
+
                 PaymentScreen(
                     onBack = { navController.popBackStack() },
-                    onComplete = { 
+                    onComplete = {
                         navController.navigate(Screen.BookingSuccess.route) {
                             popUpTo(Screen.SelectDateTime.route) { inclusive = true }
                         }
                     },
-                    viewModel = bookingViewModel
+                    viewModel = viewModel
                 )
             }
 
             // Booking Success Screen
-            composable(
-                route = Screen.BookingSuccess.route
-            ) { backStackEntry ->
-                val parentEntry = remember(backStackEntry) {
-                    navController.getBackStackEntry(Screen.SelectDateTime.route)
-                }
-                val bookingViewModel: BookingViewModel = hiltViewModel(parentEntry)
-                
+            composable(route = Screen.BookingSuccess.route) {
                 BookingSuccessScreen(
                     onViewBookings = {
                         navController.navigate(Screen.MyBookings.route) {
@@ -216,8 +272,7 @@ fun BookingNavHost(
                         navController.navigate(Screen.Home.route) {
                             popUpTo(Screen.Home.route) { inclusive = true }
                         }
-                    },
-                    viewModel = bookingViewModel
+                    }
                 )
             }
 
@@ -233,7 +288,8 @@ fun BookingNavHost(
                     navArgument("bookingId") { type = NavType.StringType }
                 )
             ) { backStackEntry ->
-                val bookingId = backStackEntry.arguments?.getString("bookingId") ?: return@composable
+                val bookingId =
+                    backStackEntry.arguments?.getString("bookingId") ?: return@composable
                 // TODO: Create BookingDetailScreen
             }
         }

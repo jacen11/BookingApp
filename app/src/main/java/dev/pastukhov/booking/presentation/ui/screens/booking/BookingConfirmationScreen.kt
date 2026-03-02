@@ -48,9 +48,11 @@ import java.time.format.FormatStyle
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookingConfirmationScreen(
+    providerId: String,
+    serviceId: String,
     onBack: () -> Unit,
     onNext: () -> Unit,
-    viewModel: BookingViewModel = hiltViewModel()
+    viewModel: BookingConfirmationViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsState()
 
@@ -60,7 +62,6 @@ fun BookingConfirmationScreen(
                 title = { Text(stringResource(R.string.confirm_booking)) },
                 navigationIcon = {
                     IconButton(onClick = {
-                        viewModel.goBack()
                         onBack()
                     }) {
                         Icon(
@@ -104,19 +105,14 @@ fun BookingConfirmationScreen(
                 notes = uiState.notes,
                 onNotesChange = { viewModel.updateNotes(it) }
             )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Next Button
             Button(
                 onClick = {
-                    viewModel.proceedToNextStep()
                     onNext()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                enabled = uiState.canProceedToPayment
+                enabled = uiState.isValid
             ) {
                 Text(stringResource(R.string.continue_to_payment))
             }

@@ -57,7 +57,7 @@ fun SelectDateTimeScreen(
     serviceId: String,
     onBack: () -> Unit,
     onNext: () -> Unit,
-    viewModel: BookingViewModel = hiltViewModel()
+    viewModel: SelectDateTimeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsState()
     var showDatePicker by remember { mutableStateOf(false) }
@@ -75,21 +75,25 @@ fun SelectDateTimeScreen(
         onNext = onNext,
         onDateSelected = { viewModel.selectDate(it) },
         onTimeSelected = { viewModel.selectTime(it) },
-        onProceedToNextStep = { viewModel.proceedToNextStep() }
+        onProceed = {
+            if (uiState.canProceed) {
+                onNext()
+            }
+        }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SelectDateTimeScreenContent(
-    uiState: BookingUiState,
+    uiState: SelectDateTimeUiState,
     showDatePicker: Boolean,
     onShowDatePickerChange: (Boolean) -> Unit,
     onBack: () -> Unit,
     onNext: () -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onTimeSelected: (LocalTime) -> Unit,
-    onProceedToNextStep: () -> Unit
+    onProceed: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -141,14 +145,11 @@ private fun SelectDateTimeScreenContent(
 
             // Next Button
             Button(
-                onClick = {
-                    onProceedToNextStep()
-                    onNext()
-                },
+                onClick = onProceed,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                enabled = uiState.canProceedToConfirmation
+                enabled = uiState.canProceed
             ) {
                 Text(stringResource(R.string.next))
             }
@@ -230,13 +231,13 @@ fun SelectDateTimeScreenPreview() {
         TimeSlot(LocalTime.of(13, 0), LocalTime.of(14, 0), isAvailable = true),
     )
 
-    val uiState = BookingUiState(
+    val uiState = SelectDateTimeUiState(
         provider = mockProvider,
         service = mockService,
         selectedDate = LocalDate.now(),
         selectedTime = LocalTime.of(10, 0),
         availableTimeSlots = timeSlots,
-     )
+    )
 
     SelectDateTimeScreenContent(
         uiState = uiState,
@@ -246,6 +247,6 @@ fun SelectDateTimeScreenPreview() {
         onNext = {},
         onDateSelected = {},
         onTimeSelected = {},
-        onProceedToNextStep = {}
+        onProceed = {}
     )
 }

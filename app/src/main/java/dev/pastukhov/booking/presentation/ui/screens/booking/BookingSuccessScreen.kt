@@ -68,11 +68,10 @@ import java.time.format.FormatStyle
 fun BookingSuccessScreen(
     onViewBookings: () -> Unit,
     onDone: () -> Unit,
-    viewModel: BookingViewModel = hiltViewModel()
+    viewModel: BookingSuccessViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current
-    val booking = uiState.completedBooking
 
     var showAnimation by remember { mutableStateOf(false) }
 
@@ -143,16 +142,18 @@ fun BookingSuccessScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Booking Details Card
-            booking?.let {
-                BookingDetailsCard(
-                    bookingNumber = it.id.take(8).uppercase(),
-                    providerName = it.providerName,
-                    serviceName = it.serviceName,
-                    date = it.date,
-                    time = it.time,
-                    address = it.providerAddress,
-                    totalPrice = it.totalPrice
-                )
+            uiState.provider?.let { provider ->
+                uiState.service?.let { service ->
+                    BookingDetailsCard(
+                        bookingNumber = uiState.bookingId.take(8).uppercase(),
+                        providerName = provider.name,
+                        serviceName = service.name,
+                        date = uiState.selectedDate ?: LocalDate.now(),
+                        time = uiState.selectedTime ?: LocalTime.now(),
+                        address = provider.address,
+                        totalPrice = service.price
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.weight(1f))
@@ -167,10 +168,10 @@ fun BookingSuccessScreen(
                         // Share booking info
                         val shareText = buildString {
                             append("Booking confirmed!\\n")
-                            append("Service: ${booking?.serviceName}\\n")
-                            append("Date: ${booking?.formattedDate()}\\n")
-                            append("Time: ${booking?.formattedTime()}\\n")
-                            append("Location: ${booking?.providerAddress}")
+                            append("Service: ${uiState.service?.name}\\n")
+                            append("Date: ${uiState.selectedDate}\\n")
+                            append("Time: ${uiState.selectedTime}\\n")
+                            append("Location: ${uiState.provider?.address}")
                         }
                         val intent = Intent().apply {
                             action = Intent.ACTION_SEND
@@ -191,7 +192,6 @@ fun BookingSuccessScreen(
 
                 Button(
                     onClick = {
-                        viewModel.resetBooking()
                         onViewBookings()
                     },
                     modifier = Modifier.weight(1f)
@@ -204,7 +204,6 @@ fun BookingSuccessScreen(
 
             OutlinedButton(
                 onClick = {
-                    viewModel.resetBooking()
                     onDone()
                 },
                 modifier = Modifier.fillMaxWidth()
