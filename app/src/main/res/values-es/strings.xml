@@ -111,4 +111,26 @@
     <string name="error_server">Error del servidor. Por favor intenta más tarde.</string>
     <string name="error_not_found">No encontrado</string>
     <string name="error_unauthorized">Por favor inicia sesión para continuar</string>
+
+    <!-- My Bookings Screen -->
+    <string name="tab_active">Activas</string>
+    <string name="tab_history">Historial</string>
+    <string name="tab_cancelled">Canceladas</string>
+    <string name="booking_status_pending">Pendiente</string>
+    <string name="booking_status_confirmed">Confirmado</string>
+    <string name="booking_status_completed">Completado</string>
+    <string name="booking_status_cancelled">Cancelado</string>
+    <string name="booking_status_no_show">No asistido</string>
+    <string name="cancel_booking">Cancelar</string>
+    <string name="repeat_booking">Reservar de nuevo</string>
+    <string name="rate_service">Calificar</string>
+    <string name="call_provider">Llamar</string>
+    <string name="message_provider">Mensaje</string>
+    <string name="empty_bookings">No hay reservas</string>
+    <string name="empty_bookings_message">Aún no tienes reservas. ¡Encuentra un servicio y reserva ahora!</string>
+    <string name="empty_bookings_action">Reservar Ahora</string>
+    <string name="cancel_booking_title">Cancelar Reserva</string>
+    <string name="cancel_booking_message">¿Estás seguro de que quieres cancelar esta reserva?</string>
+    <string name="yes_cancel">Sí, Cancelar</string>
+    <string name="no_keep">No, Mantener</string>
 </resources>

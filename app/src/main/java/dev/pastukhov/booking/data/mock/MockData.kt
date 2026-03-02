@@ -363,6 +363,7 @@ object MockData {
 
     // Sample bookings
     val mockBookings = listOf(
+        // Active bookings (Pending + Confirmed)
         BookingDto(
             id = "booking_001",
             userId = "user_001",
@@ -370,7 +371,7 @@ object MockData {
             providerName = "Studio Belleza María",
             serviceId = "service_001_1",
             serviceName = "Corte de cabello",
-            date = "2026-03-01",
+            date = "2026-03-15",
             time = "10:00",
             status = "CONFIRMED",
             totalPrice = 350.0,
@@ -390,6 +391,107 @@ object MockData {
             totalPrice = 200.0,
             notes = "Primera vez en este lugar",
             createdAt = "2026-02-26T09:15:00Z"
+        ),
+        BookingDto(
+            id = "booking_003",
+            userId = "user_001",
+            providerId = "provider_004",
+            providerName = "Spa Relax",
+            serviceId = "service_004_1",
+            serviceName = "Masaje relajante",
+            date = "2026-03-25",
+            time = "16:00",
+            status = "CONFIRMED",
+            totalPrice = 700.0,
+            notes = "Prefiero aceite de lavanda",
+            createdAt = "2026-02-27T11:00:00Z"
+        ),
+        // Completed bookings (History)
+        BookingDto(
+            id = "booking_004",
+            userId = "user_001",
+            providerId = "provider_001",
+            providerName = "Studio Belleza María",
+            serviceId = "service_001_2",
+            serviceName = "Manicure",
+            date = "2026-02-10",
+            time = "11:00",
+            status = "COMPLETED",
+            totalPrice = 250.0,
+            notes = null,
+            createdAt = "2026-02-05T10:00:00Z"
+        ),
+        BookingDto(
+            id = "booking_005",
+            userId = "user_001",
+            providerId = "provider_002",
+            providerName = "Clínica Dental Sonrisa",
+            serviceId = "service_002_1",
+            serviceName = "Limpieza dental",
+            date = "2026-02-15",
+            time = "09:00",
+            status = "COMPLETED",
+            totalPrice = 600.0,
+            notes = null,
+            createdAt = "2026-02-10T08:00:00Z"
+        ),
+        BookingDto(
+            id = "booking_006",
+            userId = "user_001",
+            providerId = "provider_003",
+            providerName = "Barbería Vintage",
+            serviceId = "service_003_3",
+            serviceName = "Paquete completo",
+            date = "2026-02-20",
+            time = "15:00",
+            status = "COMPLETED",
+            totalPrice = 320.0,
+            notes = "Excelente servicio",
+            createdAt = "2026-02-18T12:00:00Z"
+        ),
+        // Cancelled bookings
+        BookingDto(
+            id = "booking_007",
+            userId = "user_001",
+            providerId = "provider_004",
+            providerName = "Spa Relax",
+            serviceId = "service_004_2",
+            serviceName = "Masaje reductivo",
+            date = "2026-02-28",
+            time = "14:00",
+            status = "CANCELLED",
+            totalPrice = 900.0,
+            notes = "No pude asistir",
+            createdAt = "2026-02-20T09:00:00Z"
+        ),
+        BookingDto(
+            id = "booking_008",
+            userId = "user_001",
+            providerId = "provider_006",
+            providerName = "Salón Elegancia",
+            serviceId = "service_001_3",
+            serviceName = "Tratamiento facial",
+            date = "2026-01-15",
+            time = "12:00",
+            status = "CANCELLED",
+            totalPrice = 500.0,
+            notes = "Cancelado por enfermedad",
+            createdAt = "2026-01-10T16:00:00Z"
+        ),
+        // No Show
+        BookingDto(
+            id = "booking_009",
+            userId = "user_001",
+            providerId = "provider_007",
+            providerName = "Barbería El Clásico",
+            serviceId = "service_003_1",
+            serviceName = "Corte clásico",
+            date = "2026-01-20",
+            time = "10:00",
+            status = "NO_SHOW",
+            totalPrice = 200.0,
+            notes = null,
+            createdAt = "2026-01-15T14:00:00Z"
         )
     )
 

@@ -20,8 +20,10 @@ import dev.pastukhov.booking.presentation.ui.screens.booking.PaymentScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.SelectDateTimeScreen
 import dev.pastukhov.booking.presentation.ui.screens.home.HomeScreen
 import dev.pastukhov.booking.presentation.ui.screens.login.LoginScreen
+import dev.pastukhov.booking.presentation.ui.screens.mybookings.MyBookingsScreen
 import dev.pastukhov.booking.presentation.ui.screens.profile.ProfileScreen
 import dev.pastukhov.booking.presentation.ui.screens.search.SearchScreen
+import dev.pastukhov.booking.presentation.viewmodel.MyBookingsViewModel
 import dev.pastukhov.booking.presentation.viewmodel.PaymentViewModel
 import dev.pastukhov.booking.presentation.viewmodel.SelectDateTimeViewModel
 
@@ -88,11 +90,6 @@ fun BookingNavHost(
                         navController.navigate(Screen.ServiceDetail.createRoute(providerId))
                     }
                 )
-            }
-
-            // Bookings Screen
-            composable(route = "bookings") {
-                // TODO: Create BookingsScreen
             }
 
             // Profile Screen
@@ -275,7 +272,25 @@ fun BookingNavHost(
 
             // My Bookings Screen
             composable(route = Screen.MyBookings.route) {
-                // TODO: Create MyBookingsScreen
+                MyBookingsScreen(
+                    onNavigateBack = { navController.popBackStack() },
+                    onBookNow = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.MyBookings.route)
+                        }
+                    },
+                    onRepeatBooking = { booking ->
+                        navController.navigate(
+                            Screen.SelectDateTime.createRoute(
+                                providerId = booking.providerId,
+                                serviceId = booking.serviceId
+                            )
+                        )
+                    },
+                    onRateService = { booking ->
+                        // TODO: Implement rating navigation
+                    }
+                )
             }
 
             // Booking Detail Screen

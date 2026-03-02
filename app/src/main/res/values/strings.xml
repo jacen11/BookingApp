@@ -111,4 +111,26 @@
     <string name="error_server">Server error. Please try again later.</string>
     <string name="error_not_found">Not found</string>
     <string name="error_unauthorized">Please log in to continue</string>
+
+    <!-- My Bookings Screen -->
+    <string name="tab_active">Active</string>
+    <string name="tab_history">History</string>
+    <string name="tab_cancelled">Cancelled</string>
+    <string name="booking_status_pending">Pending</string>
+    <string name="booking_status_confirmed">Confirmed</string>
+    <string name="booking_status_completed">Completed</string>
+    <string name="booking_status_cancelled">Cancelled</string>
+    <string name="booking_status_no_show">No Show</string>
+    <string name="cancel_booking">Cancel</string>
+    <string name="repeat_booking">Book Again</string>
+    <string name="rate_service">Rate</string>
+    <string name="call_provider">Call</string>
+    <string name="message_provider">Message</string>
+    <string name="empty_bookings">No Bookings</string>
+    <string name="empty_bookings_message">You dont have any bookings yet. Find a service and book now!</string>
+    <string name="empty_bookings_action">Book Now</string>
+    <string name="cancel_booking_title">Cancel Booking</string>
+    <string name="cancel_booking_message">Are you sure you want to cancel this booking?</string>
+    <string name="yes_cancel">Yes, Cancel</string>
+    <string name="no_keep">No, Keep</string>
 </resources>

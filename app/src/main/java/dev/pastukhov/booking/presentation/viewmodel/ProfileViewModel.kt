@@ -38,7 +38,7 @@ class ProfileViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true) }
             try {
                 userRepository.getCurrentUser().collect { user ->
-                    _uiState.update { it.copy(user = user, isLoading = false) }
+                    _uiState.update { it.copy(user = user!!, isLoading = false) }
                 }
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, error = e.message) }
