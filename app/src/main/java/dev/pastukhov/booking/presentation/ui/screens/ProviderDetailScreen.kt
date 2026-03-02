@@ -45,6 +45,7 @@ import dev.pastukhov.booking.presentation.ui.components.ErrorState
 import dev.pastukhov.booking.presentation.ui.components.LoadingIndicator
 import dev.pastukhov.booking.presentation.ui.components.RatingComponent
 import dev.pastukhov.booking.presentation.ui.components.ServiceCard
+import dev.pastukhov.booking.presentation.viewmodel.ProviderDetailEvent
 import dev.pastukhov.booking.presentation.viewmodel.ProviderDetailUiState
 import dev.pastukhov.booking.presentation.viewmodel.ProviderDetailViewModel
 
@@ -57,13 +58,13 @@ fun ProviderDetailScreen(
     onBackClick: () -> Unit,
     viewModel: ProviderDetailViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.state.collectAsState()
 
     ProviderDetailContent(
         uiState = uiState,
         onBackClick = onBackClick,
-        onServiceSelect = { viewModel.selectService(it) },
-        onRetry = { viewModel.loadProvider() },
+        onServiceSelect = { viewModel.handleEvent(ProviderDetailEvent.SelectService(it)) },
+        onRetry = { viewModel.handleEvent(ProviderDetailEvent.LoadProvider) },
         onBookingClick = onBookingClick
     )
 }
@@ -227,11 +228,7 @@ private fun ProviderDetailContent(
                         ) {
                             Button(
                                 onClick = {
-                                    uiState.provider?.let { provider ->
-                                        uiState.selectedService?.let { service ->
-                                            onBookingClick(provider.id, service.id)
-                                        }
-                                    }
+                                    onBookingClick(uiState.provider.id, uiState.selectedService.id)
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
