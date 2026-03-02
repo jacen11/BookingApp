@@ -23,7 +23,6 @@ import dev.pastukhov.booking.presentation.ui.screens.login.LoginScreen
 import dev.pastukhov.booking.presentation.ui.screens.mybookings.MyBookingsScreen
 import dev.pastukhov.booking.presentation.ui.screens.profile.ProfileScreen
 import dev.pastukhov.booking.presentation.ui.screens.search.SearchScreen
-import dev.pastukhov.booking.presentation.viewmodel.MyBookingsViewModel
 import dev.pastukhov.booking.presentation.viewmodel.PaymentViewModel
 import dev.pastukhov.booking.presentation.viewmodel.SelectDateTimeViewModel
 

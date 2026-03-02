@@ -52,7 +52,6 @@ import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.presentation.ui.components.BookingItemCard
 import dev.pastukhov.booking.presentation.viewmodel.BookingTab
 import dev.pastukhov.booking.presentation.viewmodel.MyBookingsEvent
-import dev.pastukhov.booking.presentation.viewmodel.MyBookingsUiState
 import dev.pastukhov.booking.presentation.viewmodel.MyBookingsViewModel
 
 /**
