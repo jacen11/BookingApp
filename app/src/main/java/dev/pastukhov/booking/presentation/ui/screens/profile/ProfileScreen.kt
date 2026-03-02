@@ -58,6 +58,7 @@ import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.AppLanguage
 import dev.pastukhov.booking.domain.model.AppTheme
 import dev.pastukhov.booking.domain.model.User
+import dev.pastukhov.booking.presentation.viewmodel.ProfileEvent
 import dev.pastukhov.booking.presentation.viewmodel.ProfileViewModel
 
 /**
@@ -77,11 +78,11 @@ fun ProfileScreen(
         language = uiState.language,
         theme = uiState.theme,
         notificationsEnabled = uiState.notificationsEnabled,
-        onLanguageChange = viewModel::setLanguage,
-        onThemeChange = viewModel::setTheme,
-        onNotificationsToggle = viewModel::setNotifications,
+        onLanguageChange = { viewModel.handleEvent(ProfileEvent.SetLanguage(it)) },
+        onThemeChange = { viewModel.handleEvent(ProfileEvent.SetTheme(it)) },
+        onNotificationsToggle = { viewModel.handleEvent(ProfileEvent.SetNotifications(it)) },
         onLogout = {
-            viewModel.logout()
+            viewModel.handleEvent(ProfileEvent.Logout)
             onLogout()
         },
         onNavigateToBookings = onNavigateToBookings,
