@@ -17,6 +17,10 @@ class BookingSuccessViewModel @Inject constructor() : BaseViewModel<BookingSucce
 
     override fun initialState(): BookingSuccessUiState = BookingSuccessUiState()
 
+    override fun handleEvent(event: Any) {
+        TODO("Not yet implemented")
+    }
+
     /**
      * Initialize success screen with booking data.
      */

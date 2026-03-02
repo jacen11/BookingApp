@@ -139,4 +139,8 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun initialState(): HomeUiState = HomeUiState()
+
+    override fun handleEvent(event: Unit) {
+        // Events are handled directly via public methods
+    }
 }

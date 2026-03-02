@@ -28,6 +28,10 @@ class BookingViewModel @Inject constructor(
 
     override fun initialState(): BookingUiState = BookingUiState()
 
+    override fun handleEvent(event: Any) {
+        TODO("Not yet implemented")
+    }
+
     /**
      * Initialize booking with provider and service data.
      */

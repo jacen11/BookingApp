@@ -1,16 +1,10 @@
 package dev.pastukhov.booking.presentation.viewmodel
 
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.domain.model.BookingStatus
 import dev.pastukhov.booking.domain.repository.BookingRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -54,6 +48,18 @@ enum class BookingTab {
 }
 
 /**
+ * Events for MyBookings screen.
+ */
+sealed class MyBookingsEvent {
+    data object LoadBookings : MyBookingsEvent()
+    data class SelectTab(val tab: BookingTab) : MyBookingsEvent()
+    data class ShowCancelDialog(val booking: Booking) : MyBookingsEvent()
+    data object DismissCancelDialog : MyBookingsEvent()
+    data object ConfirmCancelBooking : MyBookingsEvent()
+    data object ClearError : MyBookingsEvent()
+}
+
+/**
  * Extension to filter bookings by tab.
  */
 fun List<Booking>.filterByTab(tab: BookingTab): List<Booking> {
@@ -71,29 +77,54 @@ fun List<Booking>.filterByTab(tab: BookingTab): List<Booking> {
 @HiltViewModel
 class MyBookingsViewModel @Inject constructor(
     private val bookingRepository: BookingRepository
-) : androidx.lifecycle.ViewModel() {
-
-    private val _uiState = MutableStateFlow(MyBookingsUiState())
-    val uiState: StateFlow<MyBookingsUiState> = _uiState.asStateFlow()
+) : BaseViewModel<MyBookingsUiState, MyBookingsEvent>() {
 
     // Default user ID for demo - in production would come from auth
     private val currentUserId = "user_001"
 
     init {
-        loadBookings()
+        handleEvent(MyBookingsEvent.LoadBookings)
     }
+
+    /**
+     * Handle events from the UI.
+     */
+    override fun handleEvent(event: MyBookingsEvent) {
+        when (event) {
+            is MyBookingsEvent.LoadBookings -> loadBookings()
+            is MyBookingsEvent.SelectTab -> selectTab(event.tab)
+            is MyBookingsEvent.ShowCancelDialog -> showCancelDialog(event.booking)
+            is MyBookingsEvent.DismissCancelDialog -> dismissCancelDialog()
+            is MyBookingsEvent.ConfirmCancelBooking -> confirmCancelBooking()
+            is MyBookingsEvent.ClearError -> clearError()
+        }
+    }
+
+    /**
+     * Provides initial state for the ViewModel.
+     */
+    override fun initialState(): MyBookingsUiState = MyBookingsUiState()
 
     /**
      * Load all bookings from repository and categorize them.
      */
-    fun loadBookings() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
+    private fun loadBookings() {
+        launchWithErrorHandling(
+            onError = { exception ->
+                updateState {
+                    copy(
+                        isLoading = false,
+                        error = exception.message ?: "Unknown error occurred"
+                    )
+                }
+            }
+        ) {
+            updateState { copy(isLoading = true, error = null) }
 
             bookingRepository.getUserBookings(currentUserId)
                 .catch { exception ->
-                    _uiState.update {
-                        it.copy(
+                    updateState {
+                        copy(
                             isLoading = false,
                             error = exception.message ?: "Unknown error occurred"
                         )
@@ -104,8 +135,8 @@ class MyBookingsViewModel @Inject constructor(
                     val completed = bookings.filterByTab(BookingTab.HISTORY)
                     val cancelled = bookings.filterByTab(BookingTab.CANCELLED)
 
-                    _uiState.update {
-                        it.copy(
+                    updateState {
+                        copy(
                             isLoading = false,
                             activeBookings = active,
                             completedBookings = completed,
@@ -120,52 +151,61 @@ class MyBookingsViewModel @Inject constructor(
     /**
      * Switch between tabs.
      */
-    fun selectTab(tab: BookingTab) {
-        _uiState.update { it.copy(selectedTab = tab) }
+    private fun selectTab(tab: BookingTab) {
+        updateState { copy(selectedTab = tab) }
     }
 
     /**
      * Show confirmation dialog before cancelling a booking.
      */
-    fun showCancelDialog(booking: Booking) {
-        _uiState.update {
-            it.copy(showCancelDialog = true, bookingToCancel = booking)
+    private fun showCancelDialog(booking: Booking) {
+        updateState {
+            copy(showCancelDialog = true, bookingToCancel = booking)
         }
     }
 
     /**
      * Dismiss cancel confirmation dialog.
      */
-    fun dismissCancelDialog() {
-        _uiState.update {
-            it.copy(showCancelDialog = false, bookingToCancel = null)
+    private fun dismissCancelDialog() {
+        updateState {
+            copy(showCancelDialog = false, bookingToCancel = null)
         }
     }
 
     /**
      * Confirm and execute booking cancellation.
      */
-    fun confirmCancelBooking() {
-        val booking = _uiState.value.bookingToCancel ?: return
+    private fun confirmCancelBooking() {
+        val booking = state.value.bookingToCancel ?: return
 
-        viewModelScope.launch {
-            _uiState.update { it.copy(isCancelling = true) }
+        launchWithErrorHandling(
+            onError = { exception ->
+                updateState {
+                    copy(
+                        isCancelling = false,
+                        error = exception.message ?: "Failed to cancel booking"
+                    )
+                }
+            }
+        ) {
+            updateState { copy(isCancelling = true) }
 
             bookingRepository.cancelBooking(booking.id)
                 .onSuccess {
-                    _uiState.update {
-                        it.copy(
+                    updateState {
+                        copy(
                             isCancelling = false,
                             showCancelDialog = false,
                             bookingToCancel = null
                         )
                     }
                     // Reload to update all lists
-                    loadBookings()
+                    handleEvent(MyBookingsEvent.LoadBookings)
                 }
                 .onFailure { exception ->
-                    _uiState.update {
-                        it.copy(
+                    updateState {
+                        copy(
                             isCancelling = false,
                             error = exception.message ?: "Failed to cancel booking"
                         )
@@ -177,7 +217,7 @@ class MyBookingsViewModel @Inject constructor(
     /**
      * Clear error message.
      */
-    fun clearError() {
-        _uiState.update { it.copy(error = null) }
+    private fun clearError() {
+        updateState { copy(error = null) }
     }
 }

@@ -19,6 +19,10 @@ class SelectDateTimeViewModel @Inject constructor() : BaseViewModel<SelectDateTi
 
     override fun initialState(): SelectDateTimeUiState = SelectDateTimeUiState()
 
+    override fun handleEvent(event: Any) {
+        TODO("Not yet implemented")
+    }
+
     /**
      * Initialize booking with provider and service data.
      */

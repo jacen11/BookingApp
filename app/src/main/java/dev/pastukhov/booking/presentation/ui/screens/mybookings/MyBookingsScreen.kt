@@ -51,6 +51,7 @@ import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.presentation.ui.components.BookingItemCard
 import dev.pastukhov.booking.presentation.viewmodel.BookingTab
+import dev.pastukhov.booking.presentation.viewmodel.MyBookingsEvent
 import dev.pastukhov.booking.presentation.viewmodel.MyBookingsUiState
 import dev.pastukhov.booking.presentation.viewmodel.MyBookingsViewModel
 
@@ -66,7 +67,7 @@ fun MyBookingsScreen(
     onRateService: (Booking) -> Unit,
     viewModel: MyBookingsViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.state.collectAsState()
     val context = LocalContext.current
 
     Scaffold(
@@ -100,7 +101,7 @@ fun MyBookingsScreen(
             // Tab Row
             BookingTabs(
                 selectedTab = uiState.selectedTab,
-                onTabSelected = { viewModel.selectTab(it) }
+                onTabSelected = { viewModel.handleEvent(MyBookingsEvent.SelectTab(it)) }
             )
 
             // Content
@@ -118,7 +119,7 @@ fun MyBookingsScreen(
                     uiState.error != null -> {
                         ErrorContent(
                             error = uiState.error!!,
-                            onRetry = { viewModel.loadBookings() }
+                            onRetry = { viewModel.handleEvent(MyBookingsEvent.LoadBookings) }
                         )
                     }
                     uiState.isEmpty -> {
@@ -128,7 +129,7 @@ fun MyBookingsScreen(
                         BookingList(
                             bookings = uiState.currentBookings,
                             tab = uiState.selectedTab,
-                            onCancelClick = { booking -> viewModel.showCancelDialog(booking) },
+                            onCancelClick = { booking -> viewModel.handleEvent(MyBookingsEvent.ShowCancelDialog(booking)) },
                             onCallClick = { phone -> dialPhone(context, phone) },
                             onMessageClick = { phone -> /* TODO: Implement message */ },
                             onRepeatClick = onRepeatBooking,
@@ -144,8 +145,8 @@ fun MyBookingsScreen(
     if (uiState.showCancelDialog) {
         CancelBookingDialog(
             isCancelling = uiState.isCancelling,
-            onConfirm = { viewModel.confirmCancelBooking() },
-            onDismiss = { viewModel.dismissCancelDialog() }
+            onConfirm = { viewModel.handleEvent(MyBookingsEvent.ConfirmCancelBooking) },
+            onDismiss = { viewModel.handleEvent(MyBookingsEvent.DismissCancelDialog) }
         )
     }
 }

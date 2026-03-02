@@ -25,6 +25,10 @@ class PaymentViewModel @Inject constructor(
 
     override fun initialState(): PaymentUiState = PaymentUiState()
 
+    override fun handleEvent(event: Any) {
+        TODO("Not yet implemented")
+    }
+
     /**
      * Initialize payment with booking data.
      */

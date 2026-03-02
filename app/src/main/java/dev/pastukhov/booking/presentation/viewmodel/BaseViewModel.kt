@@ -25,6 +25,11 @@ abstract class BaseViewModel<State, Event> : ViewModel() {
     protected abstract fun initialState(): State
 
     /**
+     * Handles events from the UI.
+     */
+    abstract fun handleEvent(event: Event)
+
+    /**
      * Updates the current state.
      */
     protected fun updateState(reducer: State.() -> State) {

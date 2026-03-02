@@ -17,6 +17,10 @@ class BookingConfirmationViewModel @Inject constructor() : BaseViewModel<Booking
 
     override fun initialState(): BookingConfirmationUiState = BookingConfirmationUiState()
 
+    override fun handleEvent(event: Any) {
+        TODO("Not yet implemented")
+    }
+
     /**
      * Set booking data from navigation arguments.
      */
