@@ -2,34 +2,14 @@ package dev.pastukhov.booking.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.pastukhov.booking.domain.model.Provider
 import dev.pastukhov.booking.domain.model.ProviderCategory
 import dev.pastukhov.booking.domain.usecase.GetProvidersUseCase
 import dev.pastukhov.booking.domain.usecase.RefreshProvidersUseCase
+import dev.pastukhov.booking.presentation.model.HomeEvent
+import dev.pastukhov.booking.presentation.model.HomeUiState
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-/**
- * UI State for Home Screen.
- */
-data class HomeUiState(
-    val providers: List<Provider> = emptyList(),
-    val isLoading: Boolean = false,
-    val error: String? = null,
-    val searchQuery: String = "",
-    val selectedCategory: ProviderCategory? = null
-)
-
-/**
- * Events for Home screen.
- */
-sealed class HomeEvent {
-    data object LoadProviders : HomeEvent()
-    data class Search(val query: String) : HomeEvent()
-    data class FilterByCategory(val category: ProviderCategory?) : HomeEvent()
-    data object Refresh : HomeEvent()
-}
 
 /**
  * ViewModel for Home Screen.

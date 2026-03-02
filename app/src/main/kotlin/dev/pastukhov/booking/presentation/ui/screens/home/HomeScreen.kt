@@ -33,11 +33,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.Provider
 import dev.pastukhov.booking.domain.model.ProviderCategory
+import dev.pastukhov.booking.presentation.model.HomeEvent
+import dev.pastukhov.booking.presentation.model.HomeUiState
 import dev.pastukhov.booking.presentation.ui.components.EmptyState
 import dev.pastukhov.booking.presentation.ui.components.ErrorState
 import dev.pastukhov.booking.presentation.ui.components.ProviderCard
-import dev.pastukhov.booking.presentation.viewmodel.HomeEvent
-import dev.pastukhov.booking.presentation.viewmodel.HomeUiState
 import dev.pastukhov.booking.presentation.viewmodel.HomeViewModel
 
 /**
