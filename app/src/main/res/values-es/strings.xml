@@ -1,6 +1,6 @@
 <resources>
     <!-- App name -->
-    <string name="app_name">Booking App</string>
+    <string name="app_name">Reservas</string>
     <string name="splash_tagline">Tu belleza, tu tiempo</string>
 
     <!-- Navigation -->
@@ -68,7 +68,7 @@
     <string name="card_number">Número de Tarjeta</string>
     <string name="expiry">Vencimiento</string>
     <string name="cvv">CVV</string>
-    <string name="security_notice">Tu información de pago está segura y encriptada.</string>
+    <string name="security_notice">Tu información de pago está segura y cifrada.</string>
     <string name="total">Total</string>
     <string name="total_paid">Total Pagado</string>
     <string name="pay_and_book">Pagar y Reservar</string>
