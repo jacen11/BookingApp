@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -31,18 +30,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
 import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.Provider
 import dev.pastukhov.booking.domain.model.ProviderCategory
-import dev.pastukhov.booking.presentation.ui.components.ProviderCard
+import dev.pastukhov.booking.presentation.ui.screens.search.component.SearchListView
+import dev.pastukhov.booking.presentation.ui.screens.search.component.SearchMapView
 import dev.pastukhov.booking.presentation.viewmodel.SearchEvent
 import dev.pastukhov.booking.presentation.viewmodel.SearchViewModel
 
@@ -58,13 +53,43 @@ fun SearchScreen(
 ) {
     val uiState by viewModel.state.collectAsState()
 
+    SearchScreenContent(
+        isLoading = uiState.isLoading,
+        searchQuery = uiState.searchQuery,
+        selectedCategory = uiState.selectedCategory,
+        filteredProviders = uiState.filteredProviders,
+        isMapView = uiState.isMapView,
+        error = uiState.error,
+        onSearchQueryChange = { viewModel.handleEvent(SearchEvent.OnSearchQueryChange(it)) },
+        onCategorySelected = { viewModel.handleEvent(SearchEvent.OnCategorySelected(it)) },
+        onToggleViewMode = { viewModel.handleEvent(SearchEvent.OnToggleViewMode) },
+        onProviderClick = onProviderClick,
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchScreenContent(
+    isLoading: Boolean,
+    searchQuery: String,
+    selectedCategory: ProviderCategory?,
+    filteredProviders: List<Provider>,
+    isMapView: Boolean,
+    error: String?,
+    onSearchQueryChange: (String) -> Unit,
+    onCategorySelected: (ProviderCategory?) -> Unit,
+    onToggleViewMode: () -> Unit,
+    onProviderClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Scaffold(
         topBar = {
             Column {
                 // Search bar
                 SearchBar(
-                    query = uiState.searchQuery,
-                    onQueryChange = { viewModel.handleEvent(SearchEvent.OnSearchQueryChange(it)) },
+                    query = searchQuery,
+                    onQueryChange = onSearchQueryChange,
                     onSearch = {},
                     active = false,
                     onActiveChange = {},
@@ -88,8 +113,8 @@ fun SearchScreen(
                 ) {
                     item {
                         FilterChip(
-                            selected = uiState.selectedCategory == null,
-                            onClick = { viewModel.handleEvent(SearchEvent.OnCategorySelected(null)) },
+                            selected = selectedCategory == null,
+                            onClick = { onCategorySelected(null) },
                             label = { Text(stringResource(R.string.filter_all)) }
                         )
                     }
@@ -102,8 +127,8 @@ fun SearchScreen(
                         )
                     ) { (category, labelRes) ->
                         FilterChip(
-                            selected = uiState.selectedCategory == category,
-                            onClick = { viewModel.handleEvent(SearchEvent.OnCategorySelected(category)) },
+                            selected = selectedCategory == category,
+                            onClick = { onCategorySelected(category) },
                             label = { Text(stringResource(labelRes)) }
                         )
                     }
@@ -111,12 +136,12 @@ fun SearchScreen(
             }
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { viewModel.handleEvent(SearchEvent.OnToggleViewMode) }) {
+            FloatingActionButton(onClick = onToggleViewMode) {
                 Icon(
-                    imageVector = if (uiState.isMapView) Icons.AutoMirrored.Filled.List else Icons.Default.Map,
-                    contentDescription = if (uiState.isMapView) 
-                        stringResource(R.string.view_list) 
-                    else 
+                    imageVector = if (isMapView) Icons.AutoMirrored.Filled.List else Icons.Default.Map,
+                    contentDescription = if (isMapView)
+                        stringResource(R.string.view_list)
+                    else
                         stringResource(R.string.view_map)
                 )
             }
@@ -128,34 +153,34 @@ fun SearchScreen(
                 .padding(paddingValues)
         ) {
             when {
-                uiState.isLoading -> {
+                isLoading -> {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
-                uiState.error != null -> {
+                error != null -> {
                     Text(
-                        text = uiState.error ?: stringResource(R.string.unknown_error),
+                        text = error,
                         modifier = Modifier.align(Alignment.Center),
                         color = MaterialTheme.colorScheme.error
                     )
                 }
-                uiState.filteredProviders.isEmpty() -> {
+                filteredProviders.isEmpty() -> {
                     Text(
                         text = stringResource(R.string.empty_search),
                         modifier = Modifier.align(Alignment.Center),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
-                uiState.isMapView -> {
-                    MapView(
-                        providers = uiState.filteredProviders,
+                isMapView -> {
+                    SearchMapView(
+                        providers = filteredProviders,
                         onProviderClick = onProviderClick
                     )
                 }
                 else -> {
-                    ListView(
-                        providers = uiState.filteredProviders,
+                    SearchListView(
+                        providers = filteredProviders,
                         onProviderClick = onProviderClick
                     )
                 }
@@ -164,52 +189,63 @@ fun SearchScreen(
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-private fun ListView(
-    providers: List<Provider>,
-    onProviderClick: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        items(providers, key = { it.id }) { provider ->
-            ProviderCard(
-                provider = provider,
-                onClick = { onProviderClick(provider.id) }
-            )
-        }
-    }
-}
+fun SearchScreenContentPreview() {
+    val sampleProviders = listOf(
+        Provider(
+            id = "1",
+            name = "Salón de Belleza Luxe",
+            description = "Centro de belleza y spa",
+            category = ProviderCategory.SALON,
+            address = "Av. Principal 123",
+            city = "Ciudad de México",
+            rating = 4.5f,
+            reviewCount = 128,
+            phone = "+52 55 1234 5678",
+            workingHours = "9:00 - 20:00",
+            priceRange = "$$"
+        ),
+        Provider(
+            id = "2",
+            name = "Barbería Clásica",
+            description = "Corte y afeitado tradicional",
+            category = ProviderCategory.BARBER,
+            address = "Calle Secundaria 45",
+            city = "Ciudad de México",
+            rating = 4.8f,
+            reviewCount = 256,
+            phone = "+52 55 8765 4321",
+            workingHours = "10:00 - 21:00",
+            priceRange = "$"
+        ),
+        Provider(
+            id = "3",
+            name = "Spa Wellness",
+            description = "Tratamientos de relajación",
+            category = ProviderCategory.SPA,
+            address = "Blvd. Salud 78",
+            city = "Ciudad de México",
+            rating = 4.9f,
+            reviewCount = 89,
+            phone = "+52 55 5555 5555",
+            workingHours = "8:00 - 22:00",
+            priceRange = "$$$"
+        )
+    )
 
-@Composable
-private fun MapView(
-    providers: List<Provider>,
-    onProviderClick: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val mexicoCity = LatLng(19.4326, -99.1332)
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(mexicoCity, 12f)
-    }
-
-    GoogleMap(
-        modifier = modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState
-    ) {
-        providers.forEach { provider ->
-            Marker(
-                state = MarkerState(
-                    position = LatLng(provider.latitude, provider.longitude)
-                ),
-                title = provider.name,
-                snippet = "${provider.rating} ⭐ • ${provider.priceRange}",
-                onInfoWindowClick = {
-                    onProviderClick(provider.id)
-                }
-            )
-        }
+    MaterialTheme {
+        SearchScreenContent(
+            isLoading = false,
+            searchQuery = "",
+            selectedCategory = null,
+            filteredProviders = sampleProviders,
+            isMapView = false,
+            error = null,
+            onSearchQueryChange = {},
+            onCategorySelected = {},
+            onToggleViewMode = {},
+            onProviderClick = {}
+        )
     }
 }
