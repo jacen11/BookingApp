@@ -1,4 +1,4 @@
-package dev.pastukhov.booking.presentation.ui.screens.booking
+package dev.pastukhov.booking.presentation.model
 
 import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.domain.model.PaymentMethod

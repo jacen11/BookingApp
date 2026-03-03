@@ -4,7 +4,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pastukhov.booking.data.mapper.toDomain
 import dev.pastukhov.booking.data.mock.MockData
 import dev.pastukhov.booking.domain.model.TimeSlot
-import dev.pastukhov.booking.presentation.ui.screens.booking.SelectDateTimeUiState
+import dev.pastukhov.booking.presentation.model.SelectDateTimeUiState
 import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.LocalTime

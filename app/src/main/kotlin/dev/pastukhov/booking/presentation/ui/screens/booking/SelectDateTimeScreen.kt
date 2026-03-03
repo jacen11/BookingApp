@@ -38,6 +38,7 @@ import dev.pastukhov.booking.domain.model.Provider
 import dev.pastukhov.booking.domain.model.ProviderCategory
 import dev.pastukhov.booking.domain.model.Service
 import dev.pastukhov.booking.domain.model.TimeSlot
+import dev.pastukhov.booking.presentation.model.SelectDateTimeUiState
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.DateSelectionSection
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.ServiceInfoCard
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.TimeSelectionSection
