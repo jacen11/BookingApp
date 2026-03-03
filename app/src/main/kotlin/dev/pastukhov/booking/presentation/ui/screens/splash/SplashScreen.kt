@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.pastukhov.booking.R
-import dev.pastukhov.booking.presentation.viewmodel.SplashDestination
+import dev.pastukhov.booking.presentation.model.SplashDestination
 import dev.pastukhov.booking.presentation.viewmodel.SplashViewModel
 
 /**
@@ -51,7 +51,7 @@ fun SplashScreen(
     onNavigateToHome: () -> Unit,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.state.collectAsState()
 
     // Animation values
     val logoScale = remember { Animatable(0f) }

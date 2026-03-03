@@ -1,32 +1,13 @@
 package dev.pastukhov.booking.presentation.viewmodel
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pastukhov.booking.data.repository.UserSettingsRepository
+import dev.pastukhov.booking.presentation.model.SplashDestination
+import dev.pastukhov.booking.presentation.model.SplashEvent
+import dev.pastukhov.booking.presentation.model.SplashUiState
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-/**
- * Sealed class representing navigation destinations after splash screen.
- */
-sealed class SplashDestination {
-    data object Home : SplashDestination()
-    data object Login : SplashDestination()
-}
-
-/**
- * UI State for Splash Screen.
- */
-data class SplashUiState(
-    val isLoading: Boolean = true,
-    val destination: SplashDestination? = null
-)
 
 /**
  * ViewModel for Splash Screen.
@@ -35,18 +16,23 @@ data class SplashUiState(
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val userSettingsRepository: UserSettingsRepository
-) : ViewModel() {
-
-    private val _uiState = MutableStateFlow(SplashUiState())
-    val uiState: StateFlow<SplashUiState> = _uiState.asStateFlow()
+) : BaseViewModel<SplashUiState, SplashEvent>() {
 
     // Minimum splash display duration to ensure user sees the logo animation
     companion object {
         const val MIN_SPLASH_DURATION_MS = 1500L
     }
 
+    override fun initialState(): SplashUiState = SplashUiState()
+
     init {
-        checkAuthAndNavigate()
+        handleEvent(SplashEvent.CheckAuth)
+    }
+
+    override fun handleEvent(event: SplashEvent) {
+        when (event) {
+            is SplashEvent.CheckAuth -> checkAuthAndNavigate()
+        }
     }
 
     /**
@@ -54,7 +40,17 @@ class SplashViewModel @Inject constructor(
      * Ensures minimum splash duration for smooth UX.
      */
     private fun checkAuthAndNavigate() {
-        viewModelScope.launch {
+        launchWithErrorHandling(
+            onError = { throwable ->
+                // Navigate to login on error as fallback
+                updateState {
+                    copy(
+                        isLoading = false,
+                        destination = SplashDestination.Login
+                    )
+                }
+            }
+        ) {
             // Record start time for minimum splash duration
             val startTime = System.currentTimeMillis()
 
@@ -71,10 +67,12 @@ class SplashViewModel @Inject constructor(
             }
 
             // Navigate based on auth status
-            _uiState.value = SplashUiState(
-                isLoading = false,
-                destination = if (isLoggedIn) SplashDestination.Home else SplashDestination.Login
-            )
+            updateState {
+                copy(
+                    isLoading = false,
+                    destination = if (isLoggedIn) SplashDestination.Home else SplashDestination.Login
+                )
+            }
         }
     }
 }
