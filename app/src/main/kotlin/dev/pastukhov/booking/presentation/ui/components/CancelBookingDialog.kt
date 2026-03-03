@@ -10,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.pastukhov.booking.R
+import dev.pastukhov.booking.ui.theme.BookingAppTheme
 
 
 /**
@@ -58,4 +60,28 @@ fun CancelBookingDialog(
             }
         }
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CancelBookingDialogPreview() {
+    BookingAppTheme {
+        CancelBookingDialog(
+            isCancelling = false,
+            onConfirm = {},
+            onDismiss = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CancelBookingDialogCancellingPreview() {
+    BookingAppTheme {
+        CancelBookingDialog(
+            isCancelling = true,
+            onConfirm = {},
+            onDismiss = {}
+        )
+    }
 }

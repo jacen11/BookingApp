@@ -180,6 +180,8 @@ class BookingDetailsViewModel @Inject constructor(
                     }
                 }
         }
+
+        //TODO close screen or show success cancelling
     }
 
     /**

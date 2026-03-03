@@ -46,105 +46,112 @@ fun ActionButtons(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         when {
-            // Active booking - show cancel, call, WhatsApp
-            isActive -> {
-                // Cancel button (red)
-                Button(
-                    onClick = onCancelClick,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFF44336)
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.cancel_booking))
-                }
+            isActive -> CancelButtons(onCancelClick, onCallClick, onWhatsAppClick)
+            isCompleted -> RateAndBooking(onRateClick, onRepeatClick)
+            isCancelled -> BookingButton(onRepeatClick)
+        }
+    }
+}
 
-                // Call and WhatsApp buttons
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    OutlinedButton(
-                        onClick = onCallClick,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Call,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.call_provider))
-                    }
+@Composable
+private fun RateAndBooking(onRateClick: () -> Unit, onRepeatClick: () -> Unit) {
+    Button(
+        onClick = onRateClick,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Icon(
+            imageVector = Icons.Default.Star,
+            contentDescription = null,
+            modifier = Modifier.size(18.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(stringResource(R.string.rate_service))
+    }
 
-                    OutlinedButton(
-                        onClick = onWhatsAppClick,
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = Color(0xFF25D366)
-                        )
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Chat,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("WhatsApp")
-                    }
-                }
-            }
+    OutlinedButton(
+        onClick = onRepeatClick,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Icon(
+            imageVector = Icons.Default.Event,
+            contentDescription = null,
+            modifier = Modifier.size(18.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(stringResource(R.string.repeat_booking))
+    }
+}
 
-            // Completed booking - show rate and repeat
-            isCompleted -> {
-                Button(
-                    onClick = onRateClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.rate_service))
-                }
+@Composable
+private fun BookingButton(onRepeatClick: () -> Unit) {
+    Button(
+        onClick = onRepeatClick,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Icon(
+            imageVector = Icons.Default.Event,
+            contentDescription = null,
+            modifier = Modifier.size(18.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(stringResource(R.string.repeat_booking))
+    }
+}
 
-                OutlinedButton(
-                    onClick = onRepeatClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Event,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.repeat_booking))
-                }
-            }
+@Composable
+private fun CancelButtons(
+    onCancelClick: () -> Unit,
+    onCallClick: () -> Unit,
+    onWhatsAppClick: () -> Unit
+) {
+    Button(
+        onClick = onCancelClick,
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFFF44336)
+        )
+    ) {
+        Icon(
+            imageVector = Icons.Default.Close,
+            contentDescription = null,
+            modifier = Modifier.size(18.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(stringResource(R.string.cancel_booking))
+    }
 
-            // Cancelled booking - show repeat only
-            isCancelled -> {
-                Button(
-                    onClick = onRepeatClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Event,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.repeat_booking))
-                }
-            }
+    // Call and WhatsApp buttons
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        OutlinedButton(
+            onClick = onCallClick,
+            modifier = Modifier.weight(1f)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Call,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(stringResource(R.string.call_provider))
+        }
+
+        OutlinedButton(
+            onClick = onWhatsAppClick,
+            modifier = Modifier.weight(1f),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = Color(0xFF25D366)
+            )
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Chat,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("WhatsApp")
         }
     }
 }
