@@ -1,6 +1,7 @@
 <resources>
     <!-- App name -->
     <string name="app_name">Booking App</string>
+    <string name="splash_tagline">Your beauty, your time</string>
 
     <!-- Navigation -->
     <string name="nav_home">Home</string>
@@ -42,6 +43,8 @@
     <string name="confirm_booking">Confirm Booking</string>
     <string name="booking_confirmed">Booking Confirmed!</string>
     <string name="booking_details">Booking Details</string>
+    <string name="date_time">Date &amp; Time</string>
+    <string name="notes">Notes</string>
     <string name="service">Service</string>
     <string name="price">Price</string>
     <string name="duration">Duration</string>
@@ -121,6 +124,12 @@
     <string name="booking_status_completed">Completed</string>
     <string name="booking_status_cancelled">Cancelled</string>
     <string name="booking_status_no_show">No Show</string>
+    <string name="booking_status_active">Active</string>
+    <string name="booking_not_found">Booking not found</string>
+    <string name="share_booking">Share</string>
+    <string name="payment_status">Payment Status</string>
+    <string name="payment_paid">Paid</string>
+    <string name="payment_pending">Pending</string>
     <string name="cancel_booking">Cancel</string>
     <string name="repeat_booking">Book Again</string>
     <string name="rate_service">Rate</string>

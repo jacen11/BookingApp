@@ -22,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,7 +32,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -52,6 +50,7 @@ import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.presentation.model.BookingTab
 import dev.pastukhov.booking.presentation.model.MyBookingsEvent
 import dev.pastukhov.booking.presentation.ui.components.BookingItemCard
+import dev.pastukhov.booking.presentation.ui.components.CancelBookingDialog
 import dev.pastukhov.booking.presentation.viewmodel.MyBookingsViewModel
 
 /**
@@ -316,51 +315,6 @@ private fun BookingList(
     }
 }
 
-/**
- * Cancel booking confirmation dialog.
- */
-@Composable
-private fun CancelBookingDialog(
-    isCancelling: Boolean,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = { if (!isCancelling) onDismiss() },
-        title = {
-            Text(
-                text = stringResource(R.string.cancel_booking_title),
-                fontWeight = FontWeight.Bold
-            )
-        },
-        text = {
-            Text(stringResource(R.string.cancel_booking_message))
-        },
-        confirmButton = {
-            Button(
-                onClick = onConfirm,
-                enabled = !isCancelling
-            ) {
-                if (isCancelling) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(16.dp),
-                        strokeWidth = 2.dp
-                    )
-                } else {
-                    Text(stringResource(R.string.yes_cancel))
-                }
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = onDismiss,
-                enabled = !isCancelling
-            ) {
-                Text(stringResource(R.string.no_keep))
-            }
-        }
-    )
-}
 
 /**
  * Open phone dialer with the given phone number.

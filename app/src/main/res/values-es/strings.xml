@@ -43,6 +43,8 @@
     <string name="confirm_booking">Confirmar Reserva</string>
     <string name="booking_confirmed">¡Reserva Confirmada!</string>
     <string name="booking_details">Detalles de la Reserva</string>
+    <string name="date_time">Fecha y Hora</string>
+    <string name="notes">Notas</string>
     <string name="service">Servicio</string>
     <string name="price">Precio</string>
     <string name="duration">Duración</string>
@@ -122,6 +124,12 @@
     <string name="booking_status_completed">Completado</string>
     <string name="booking_status_cancelled">Cancelado</string>
     <string name="booking_status_no_show">No asistido</string>
+    <string name="booking_status_active">Activa</string>
+    <string name="booking_not_found">Reserva no encontrada</string>
+    <string name="share_booking">Compartir</string>
+    <string name="payment_status">Estado del pago</string>
+    <string name="payment_paid">Pagado</string>
+    <string name="payment_pending">Pendiente</string>
     <string name="cancel_booking">Cancelar</string>
     <string name="repeat_booking">Reservar de nuevo</string>
     <string name="rate_service">Calificar</string>

@@ -21,6 +21,7 @@ import dev.pastukhov.booking.presentation.ui.screens.booking.BookingConfirmation
 import dev.pastukhov.booking.presentation.ui.screens.booking.BookingSuccessScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.PaymentScreen
 import dev.pastukhov.booking.presentation.ui.screens.booking.SelectDateTimeScreen
+import dev.pastukhov.booking.presentation.ui.screens.bookingdetails.BookingDetailsScreen
 import dev.pastukhov.booking.presentation.ui.screens.home.HomeScreen
 import dev.pastukhov.booking.presentation.ui.screens.login.LoginScreen
 import dev.pastukhov.booking.presentation.ui.screens.mybookings.MyBookingsScreen
@@ -370,7 +371,21 @@ fun BookingNavHost(
             ) { backStackEntry ->
                 val bookingId =
                     backStackEntry.arguments?.getString("bookingId") ?: return@composable
-                // TODO: Create BookingDetailScreen
+                BookingDetailsScreen(
+                    bookingId = bookingId,
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToProvider = { providerId ->
+                        navController.navigate(Screen.ServiceDetail.createRoute(providerId))
+                    },
+                    onNavigateToRepeatBooking = { providerId, serviceId ->
+                        navController.navigate(
+                            Screen.SelectDateTime.createRoute(providerId, serviceId)
+                        )
+                    },
+                    onNavigateToRate = { id ->
+                        // TODO: Navigate to rating screen
+                    }
+                )
             }
         }
     }
