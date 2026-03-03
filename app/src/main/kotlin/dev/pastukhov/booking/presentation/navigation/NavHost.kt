@@ -43,6 +43,7 @@ import java.util.UUID
 fun BookingNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    //todo transfer to viewmodel
     userSettingsRepository: UserSettingsRepository,
     startDestination: String = Screen.Splash.route
 ) {
