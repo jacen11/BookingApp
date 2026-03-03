@@ -38,6 +38,7 @@ import dev.pastukhov.booking.domain.model.Provider
 import dev.pastukhov.booking.domain.model.ProviderCategory
 import dev.pastukhov.booking.domain.model.Service
 import dev.pastukhov.booking.domain.model.TimeSlot
+import dev.pastukhov.booking.presentation.model.SelectDateTimeEvent
 import dev.pastukhov.booking.presentation.model.SelectDateTimeUiState
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.DateSelectionSection
 import dev.pastukhov.booking.presentation.ui.screens.booking.component.ServiceInfoCard
@@ -66,7 +67,7 @@ fun SelectDateTimeScreen(
 
     // Initialize booking when screen loads
     LaunchedEffect(providerId, serviceId) {
-        viewModel.initializeBooking(providerId, serviceId)
+        viewModel.handleEvent(SelectDateTimeEvent.InitializeBooking(providerId, serviceId))
     }
 
     SelectDateTimeScreenContent(
@@ -75,8 +76,8 @@ fun SelectDateTimeScreen(
         onShowDatePickerChange = { showDatePicker = it },
         onBack = onBack,
         onNext = onNext,
-        onDateSelected = { viewModel.selectDate(it) },
-        onTimeSelected = { viewModel.selectTime(it) },
+        onDateSelected = { viewModel.handleEvent(SelectDateTimeEvent.SelectDate(it)) },
+        onTimeSelected = { viewModel.handleEvent(SelectDateTimeEvent.SelectTime(it)) },
         onProceed = {
             if (uiState.canProceed) {
                 onNext()

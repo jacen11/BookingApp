@@ -4,6 +4,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pastukhov.booking.data.mapper.toDomain
 import dev.pastukhov.booking.data.mock.MockData
 import dev.pastukhov.booking.domain.model.TimeSlot
+import dev.pastukhov.booking.presentation.model.SelectDateTimeEvent
 import dev.pastukhov.booking.presentation.model.SelectDateTimeUiState
 import kotlinx.coroutines.delay
 import java.time.LocalDate
@@ -15,18 +16,27 @@ import javax.inject.Inject
  * Manages date and time selection for booking.
  */
 @HiltViewModel
-class SelectDateTimeViewModel @Inject constructor() : BaseViewModel<SelectDateTimeUiState, Any>() {
+class SelectDateTimeViewModel @Inject constructor() : BaseViewModel<SelectDateTimeUiState, SelectDateTimeEvent>() {
 
     override fun initialState(): SelectDateTimeUiState = SelectDateTimeUiState()
 
-    override fun handleEvent(event: Any) {
-        TODO("Not yet implemented")
+    override fun handleEvent(event: SelectDateTimeEvent) {
+        when (event) {
+            is SelectDateTimeEvent.InitializeBooking -> initializeBooking(
+                event.providerId,
+                event.serviceId
+            )
+            is SelectDateTimeEvent.LoadTimeSlots -> loadTimeSlots(event.date)
+            is SelectDateTimeEvent.SelectDate -> selectDate(event.date)
+            is SelectDateTimeEvent.SelectTime -> selectTime(event.time)
+            is SelectDateTimeEvent.ClearError -> clearError()
+        }
     }
 
     /**
      * Initialize booking with provider and service data.
      */
-    fun initializeBooking(providerId: String, serviceId: String) {
+    private fun initializeBooking(providerId: String, serviceId: String) {
         val provider = MockData.mockProviders.find { it.id == providerId }
         val service = MockData.getServicesForProvider(providerId).find { it.id == serviceId }
 
@@ -44,7 +54,7 @@ class SelectDateTimeViewModel @Inject constructor() : BaseViewModel<SelectDateTi
     /**
      * Generate mock available time slots for a given date.
      */
-    fun loadTimeSlots(date: LocalDate = LocalDate.now()) {
+    private fun loadTimeSlots(date: LocalDate = LocalDate.now()) {
         launchWithErrorHandling(
             onError = { throwable ->
                 updateState { copy(error = throwable.message, isLoadingSlots = false) }
@@ -96,7 +106,7 @@ class SelectDateTimeViewModel @Inject constructor() : BaseViewModel<SelectDateTi
     /**
      * Select a date for the booking.
      */
-    fun selectDate(date: LocalDate) {
+    private fun selectDate(date: LocalDate) {
         updateState {
             copy(
                 selectedDate = date,
@@ -110,7 +120,7 @@ class SelectDateTimeViewModel @Inject constructor() : BaseViewModel<SelectDateTi
     /**
      * Select a time slot.
      */
-    fun selectTime(time: LocalTime) {
+    private fun selectTime(time: LocalTime) {
         updateState {
             copy(
                 selectedTime = time,
@@ -122,7 +132,7 @@ class SelectDateTimeViewModel @Inject constructor() : BaseViewModel<SelectDateTi
     /**
      * Clear error message.
      */
-    fun clearError() {
+    private fun clearError() {
         updateState { copy(error = null) }
     }
 }
