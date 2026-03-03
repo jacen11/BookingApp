@@ -3,18 +3,9 @@ package dev.pastukhov.booking.presentation.viewmodel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.pastukhov.booking.domain.model.ProviderCategory
 import dev.pastukhov.booking.domain.repository.ProviderRepository
+import dev.pastukhov.booking.presentation.model.SearchEvent
 import dev.pastukhov.booking.presentation.ui.screens.search.SearchUiState
 import javax.inject.Inject
-
-/**
- * Events for Search screen.
- */
-sealed class SearchEvent {
-    data class OnSearchQueryChange(val query: String) : SearchEvent()
-    data class OnCategorySelected(val category: ProviderCategory?) : SearchEvent()
-    data object OnToggleViewMode : SearchEvent()
-    data object OnLoadProviders : SearchEvent()
-}
 
 /**
  * ViewModel for Search screen.

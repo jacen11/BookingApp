@@ -2,31 +2,13 @@ package dev.pastukhov.booking.presentation.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.pastukhov.booking.domain.model.Provider
 import dev.pastukhov.booking.domain.model.Service
 import dev.pastukhov.booking.domain.usecase.GetProvidersUseCase
 import dev.pastukhov.booking.domain.usecase.GetServicesUseCase
+import dev.pastukhov.booking.presentation.model.ProviderDetailEvent
+import dev.pastukhov.booking.presentation.model.ProviderDetailUiState
 import kotlinx.coroutines.flow.catch
 import javax.inject.Inject
-
-/**
- * UI State for Provider Detail Screen.
- */
-data class ProviderDetailUiState(
-    val provider: Provider? = null,
-    val services: List<Service> = emptyList(),
-    val selectedService: Service? = null,
-    val isLoading: Boolean = false,
-    val error: String? = null
-)
-
-/**
- * Events for Provider Detail Screen.
- */
-sealed class ProviderDetailEvent {
-    data class SelectService(val service: Service) : ProviderDetailEvent()
-    data object LoadProvider : ProviderDetailEvent()
-}
 
 /**
  * ViewModel for Provider Detail Screen.

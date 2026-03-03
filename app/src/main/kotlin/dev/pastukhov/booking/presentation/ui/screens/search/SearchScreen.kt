@@ -36,9 +36,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.Provider
 import dev.pastukhov.booking.domain.model.ProviderCategory
+import dev.pastukhov.booking.presentation.model.SearchEvent
 import dev.pastukhov.booking.presentation.ui.screens.search.component.SearchListView
 import dev.pastukhov.booking.presentation.ui.screens.search.component.SearchMapView
-import dev.pastukhov.booking.presentation.viewmodel.SearchEvent
 import dev.pastukhov.booking.presentation.viewmodel.SearchViewModel
 
 /**

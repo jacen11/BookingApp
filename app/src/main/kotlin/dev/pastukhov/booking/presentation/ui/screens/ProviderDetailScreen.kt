@@ -40,13 +40,13 @@ import dev.pastukhov.booking.R
 import dev.pastukhov.booking.domain.model.Provider
 import dev.pastukhov.booking.domain.model.ProviderCategory
 import dev.pastukhov.booking.domain.model.Service
+import dev.pastukhov.booking.presentation.model.ProviderDetailEvent
+import dev.pastukhov.booking.presentation.model.ProviderDetailUiState
 import dev.pastukhov.booking.presentation.ui.components.EmptyState
 import dev.pastukhov.booking.presentation.ui.components.ErrorState
 import dev.pastukhov.booking.presentation.ui.components.LoadingIndicator
 import dev.pastukhov.booking.presentation.ui.components.RatingComponent
 import dev.pastukhov.booking.presentation.ui.components.ServiceCard
-import dev.pastukhov.booking.presentation.viewmodel.ProviderDetailEvent
-import dev.pastukhov.booking.presentation.viewmodel.ProviderDetailUiState
 import dev.pastukhov.booking.presentation.viewmodel.ProviderDetailViewModel
 
 /**
