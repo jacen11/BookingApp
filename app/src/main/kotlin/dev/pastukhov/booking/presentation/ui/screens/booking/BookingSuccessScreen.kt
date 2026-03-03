@@ -69,6 +69,7 @@ import java.time.format.FormatStyle
 @Composable
 fun BookingSuccessScreen(
     onViewBookings: () -> Unit,
+    onViewDetails: (String) -> Unit,
     onDone: () -> Unit,
     viewModel: BookingSuccessViewModel = hiltViewModel()
 ) {
@@ -81,6 +82,7 @@ fun BookingSuccessScreen(
         selectedTime = uiState.selectedTime,
         bookingId = uiState.bookingId,
         onViewBookings = onViewBookings,
+        onViewDetails = onViewDetails,
         onDone = onDone
     )
 }
@@ -93,6 +95,7 @@ fun BookingSuccessScreenContent(
     selectedTime: LocalTime?,
     bookingId: String,
     onViewBookings: () -> Unit,
+    onViewDetails: (String) -> Unit,
     onDone: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -229,11 +232,11 @@ fun BookingSuccessScreenContent(
 
             OutlinedButton(
                 onClick = {
-                    onDone()
+                    onViewDetails(bookingId)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(stringResource(R.string.done))
+                Text(stringResource(R.string.view_booking_details))
             }
         }
     }
@@ -404,7 +407,8 @@ fun BookingSuccessScreenContentPreview() {
             selectedTime = LocalTime.of(14, 30),
             bookingId = "abc123def456",
             onViewBookings = {},
-            onDone = {}
+            onDone = {},
+            onViewDetails = {},
         )
     }
 }

@@ -78,6 +78,7 @@
     <string name="booking_success_message">Your appointment has been confirmed.</string>
     <string name="booking_number">Booking #</string>
     <string name="share">Share</string>
+    <string name="view_booking_details">View Details</string>
     <string name="view_my_bookings">My Bookings</string>
     <string name="done">Done</string>
 
@@ -114,6 +115,9 @@
     <string name="error_server">Server error. Please try again later.</string>
     <string name="error_not_found">Not found</string>
     <string name="error_unauthorized">Please log in to continue</string>
+    <string name="error_booking_not_found">Booking not found. It may have been cancelled or expired.</string>
+    <string name="error_invalid_booking">Invalid booking ID.</string>
+    <string name="navigate_home">Go to Home</string>
 
     <!-- My Bookings Screen -->
     <string name="tab_active">Active</string>

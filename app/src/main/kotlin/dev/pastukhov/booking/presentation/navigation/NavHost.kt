@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import dev.pastukhov.booking.data.repository.UserSettingsRepository
 import dev.pastukhov.booking.presentation.model.BookingSuccessEvent
 import dev.pastukhov.booking.presentation.model.PaymentEvent
@@ -331,6 +332,9 @@ fun BookingNavHost(
                             popUpTo(Screen.Home.route)
                         }
                     },
+                    onViewDetails = { bookingId ->
+                        navController.navigate(Screen.BookingDetail.createRoute(bookingId))
+                    },
                     onDone = {
                         navController.navigate(Screen.Home.route) {
                             popUpTo(Screen.Home.route) { inclusive = true }
@@ -349,6 +353,9 @@ fun BookingNavHost(
                             popUpTo(Screen.MyBookings.route)
                         }
                     },
+                    onBookingClick = { bookingId ->
+                        navController.navigate(Screen.BookingDetail.createRoute(bookingId))
+                    },
                     onRepeatBooking = { booking ->
                         navController.navigate(
                             Screen.SelectDateTime.createRoute(
@@ -363,11 +370,19 @@ fun BookingNavHost(
                 )
             }
 
-            // Booking Detail Screen
+            // Booking Detail Screen - with Deep Link support
             composable(
                 route = Screen.BookingDetail.route,
                 arguments = listOf(
                     navArgument("bookingId") { type = NavType.StringType }
+                ),
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern = "myapp://booking_details/{bookingId}"
+                    },
+                    navDeepLink {
+                        uriPattern = "https://bookingapp.com/booking/{bookingId}"
+                    }
                 )
             ) { backStackEntry ->
                 val bookingId =

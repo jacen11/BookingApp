@@ -78,6 +78,7 @@
     <string name="booking_success_message">Tu cita ha sido confirmada.</string>
     <string name="booking_number">Reserva #</string>
     <string name="share">Compartir</string>
+    <string name="view_booking_details">Ver Detalles</string>
     <string name="view_my_bookings">Mis Citas</string>
     <string name="done">Hecho</string>
 
@@ -114,6 +115,9 @@
     <string name="error_server">Error del servidor. Por favor intenta más tarde.</string>
     <string name="error_not_found">No encontrado</string>
     <string name="error_unauthorized">Por favor inicia sesión para continuar</string>
+    <string name="error_booking_not_found">Reserva no encontrada. Puede haber sido cancelada o expirada.</string>
+    <string name="error_invalid_booking">ID de reserva inválido.</string>
+    <string name="navigate_home">Ir a Inicio</string>
 
     <!-- My Bookings Screen -->
     <string name="tab_active">Activas</string>

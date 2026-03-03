@@ -61,6 +61,7 @@ import dev.pastukhov.booking.presentation.viewmodel.MyBookingsViewModel
 fun MyBookingsScreen(
     onNavigateBack: () -> Unit,
     onBookNow: () -> Unit,
+    onBookingClick: (String) -> Unit,
     onRepeatBooking: (Booking) -> Unit,
     onRateService: (Booking) -> Unit,
     viewModel: MyBookingsViewModel = hiltViewModel()
@@ -127,6 +128,7 @@ fun MyBookingsScreen(
                         BookingList(
                             bookings = uiState.currentBookings,
                             tab = uiState.selectedTab,
+                            onBookingClick = onBookingClick,
                             onCancelClick = { booking -> viewModel.handleEvent(MyBookingsEvent.ShowCancelDialog(booking)) },
                             onCallClick = { phone -> dialPhone(context, phone) },
                             onMessageClick = { phone -> /* TODO: Implement message */ },
@@ -287,6 +289,7 @@ private fun EmptyContent(
 private fun BookingList(
     bookings: List<Booking>,
     tab: BookingTab,
+    onBookingClick: (String) -> Unit,
     onCancelClick: (Booking) -> Unit,
     onCallClick: (String) -> Unit,
     onMessageClick: (String) -> Unit,
@@ -304,6 +307,7 @@ private fun BookingList(
             BookingItemCard(
                 booking = booking,
                 tab = tab,
+                onBookingClick = { onBookingClick(booking.id) },
                 onCancelClick = { onCancelClick(booking) },
                 onCallClick = onCallClick,
                 onMessageClick = onMessageClick,
