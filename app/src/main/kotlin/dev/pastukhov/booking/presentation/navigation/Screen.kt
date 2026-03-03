@@ -55,7 +55,10 @@ sealed class Screen(val route: String) {
     }
 
     // Booking success screen
-    data object BookingSuccess : Screen("booking/success")
+    data object BookingSuccess : Screen("booking/success/{providerId}/{serviceId}/{date}/{time}/{bookingId}") {
+        fun createRoute(providerId: String, serviceId: String, date: String, time: String, bookingId: String) =
+            "booking/success/$providerId/$serviceId/$date/$time/$bookingId"
+    }
 
     // Profile screens
     data object Profile : Screen("profile")

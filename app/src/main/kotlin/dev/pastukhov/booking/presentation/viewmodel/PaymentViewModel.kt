@@ -7,6 +7,7 @@ import dev.pastukhov.booking.data.mapper.toEntity
 import dev.pastukhov.booking.data.mock.MockData
 import dev.pastukhov.booking.domain.model.Booking
 import dev.pastukhov.booking.domain.model.BookingStatus
+import dev.pastukhov.booking.domain.model.PaymentMethod
 import dev.pastukhov.booking.presentation.model.PaymentEvent
 import dev.pastukhov.booking.presentation.model.PaymentUiState
 import java.time.LocalDate
@@ -78,7 +79,7 @@ class PaymentViewModel @Inject constructor(
     /**
      * Select payment method.
      */
-    private fun selectPaymentMethod(method: dev.pastukhov.booking.domain.model.PaymentMethod) {
+    private fun selectPaymentMethod(method: PaymentMethod) {
         updateState { copy(selectedPaymentMethod = method) }
     }
 
@@ -146,9 +147,9 @@ class PaymentViewModel @Inject constructor(
                 totalPrice = service.price,
                 notes = currentState.notes.ifBlank { null },
                 paymentMethod = currentState.selectedPaymentMethod,
-                cardNumber = if (currentState.selectedPaymentMethod == dev.pastukhov.booking.domain.model.PaymentMethod.CARD)
+                cardNumber = if (currentState.selectedPaymentMethod == PaymentMethod.CARD)
                     currentState.cardNumber else null,
-                cardExpiry = if (currentState.selectedPaymentMethod == dev.pastukhov.booking.domain.model.PaymentMethod.CARD)
+                cardExpiry = if (currentState.selectedPaymentMethod == PaymentMethod.CARD)
                     currentState.cardExpiry else null,
                 isPaid = true
             )
@@ -157,6 +158,7 @@ class PaymentViewModel @Inject constructor(
 
             updateState {
                 copy(
+                    bookingId = booking.id,
                     isLoading = false,
                     error = null
                 )

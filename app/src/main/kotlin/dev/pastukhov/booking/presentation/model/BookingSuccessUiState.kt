@@ -14,5 +14,6 @@ data class BookingSuccessUiState(
     val selectedDate: LocalDate? = null,
     val selectedTime: LocalTime? = null,
     val bookingId: String = "",
+    val isLoading: Boolean = false,
     val error: String? = null
 )

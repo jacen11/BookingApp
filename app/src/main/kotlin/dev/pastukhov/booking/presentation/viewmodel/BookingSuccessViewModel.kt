@@ -1,11 +1,14 @@
 package dev.pastukhov.booking.presentation.viewmodel
 
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.pastukhov.booking.data.mapper.toDomain
-import dev.pastukhov.booking.data.mock.MockData
+import dev.pastukhov.booking.domain.usecase.GetProvidersUseCase
+import dev.pastukhov.booking.domain.usecase.GetServicesUseCase
+import dev.pastukhov.booking.presentation.model.BookingSuccessEvent
 import dev.pastukhov.booking.presentation.model.BookingSuccessUiState
-import java.time.LocalDate
-import java.time.LocalTime
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -13,49 +16,78 @@ import javax.inject.Inject
  * Displays successful booking confirmation.
  */
 @HiltViewModel
-class BookingSuccessViewModel @Inject constructor() : BaseViewModel<BookingSuccessUiState, Any>() {
+class BookingSuccessViewModel @Inject constructor(
+    private val providersUseCase: GetProvidersUseCase,
+    private val servicesUseCase: GetServicesUseCase
+) : BaseViewModel<BookingSuccessUiState, BookingSuccessEvent>() {
 
     override fun initialState(): BookingSuccessUiState = BookingSuccessUiState()
 
-    override fun handleEvent(event: Any) {
-        TODO("Not yet implemented")
+    override fun handleEvent(event: BookingSuccessEvent) {
+        when (event) {
+            is BookingSuccessEvent.InitializeBooking -> initializeBooking(
+                event.providerId,
+                event.serviceId,
+                event.date,
+                event.time,
+                event.bookingId
+            )
+            is BookingSuccessEvent.ClearError -> clearError()
+            is BookingSuccessEvent.ResetBooking -> resetBooking()
+        }
     }
 
     /**
      * Initialize success screen with booking data.
      */
-    fun initializeBooking(
+    private fun initializeBooking(
         providerId: String,
         serviceId: String,
-        date: LocalDate,
-        time: LocalTime,
+        date: java.time.LocalDate,
+        time: java.time.LocalTime,
         bookingId: String
     ) {
-        val provider = MockData.mockProviders.find { it.id == providerId }
-        val service = MockData.getServicesForProvider(providerId).find { it.id == serviceId }
+        viewModelScope.launch {
+            updateState { copy(isLoading = true, error = null) }
 
-        updateState {
-            copy(
-                provider = provider?.toDomain(),
-                service = service?.toDomain(),
-                selectedDate = date,
-                selectedTime = time,
-                bookingId = bookingId
-            )
+            combine(
+                providersUseCase.byId(providerId),
+                servicesUseCase.byId(serviceId)
+            ) { provider, service ->
+                Pair(provider, service)
+            }
+                .catch { e ->
+                    updateState {
+                        copy(isLoading = false, error = e.message)
+                    }
+                }
+                .collect { (provider, service) ->
+                    updateState {
+                        copy(
+                            provider = provider,
+                            service = service,
+                            selectedDate = date,
+                            selectedTime = time,
+                            bookingId = bookingId,
+                            isLoading = false,
+                            error = null
+                        )
+                    }
+                }
         }
     }
 
     /**
      * Clear error message.
      */
-    fun clearError() {
+    private fun clearError() {
         updateState { copy(error = null) }
     }
 
     /**
      * Reset the success screen state.
      */
-    fun resetBooking() {
+    private fun resetBooking() {
         updateState { BookingSuccessUiState() }
     }
 }

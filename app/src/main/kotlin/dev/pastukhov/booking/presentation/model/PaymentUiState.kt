@@ -24,15 +24,17 @@ data class PaymentUiState(
     val cardExpiryError: String? = null,
     val cardCvvError: String? = null,
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val bookingId: String = "",
 ) {
     val isCardValid: Boolean
         get() = when (selectedPaymentMethod) {
             PaymentMethod.CARD -> {
                 cardNumber.length >= 16 &&
-                cardExpiry.length >= 4 &&
-                cardCvv.length >= 3
+                        cardExpiry.length >= 4 &&
+                        cardCvv.length >= 3
             }
+
             else -> true
         }
 

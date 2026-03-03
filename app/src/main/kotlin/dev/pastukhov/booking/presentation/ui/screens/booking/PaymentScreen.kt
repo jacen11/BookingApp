@@ -176,12 +176,9 @@ fun PaymentScreenPreview() {
 
     val mockUiState = PaymentUiState(
         service = mockService,
-        selectedPaymentMethod = PaymentMethod.CARD,
         cardNumber = "4532015112830366",
         cardExpiry = "12/25",
         cardCvv = "123",
-        isLoading = false,
-        error = null,
     )
 
     PaymentContent(
