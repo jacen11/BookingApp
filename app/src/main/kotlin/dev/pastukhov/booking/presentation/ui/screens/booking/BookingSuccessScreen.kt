@@ -52,8 +52,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import dev.pastukhov.booking.R
-import dev.pastukhov.booking.domain.model.Booking
-import dev.pastukhov.booking.domain.model.BookingStatus
+import dev.pastukhov.booking.domain.model.Provider
+import dev.pastukhov.booking.domain.model.ProviderCategory
+import dev.pastukhov.booking.domain.model.Service
 import dev.pastukhov.booking.presentation.viewmodel.BookingSuccessViewModel
 import kotlinx.coroutines.delay
 import java.time.LocalDate
@@ -72,6 +73,29 @@ fun BookingSuccessScreen(
     viewModel: BookingSuccessViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsState()
+
+    BookingSuccessScreenContent(
+        provider = uiState.provider,
+        service = uiState.service,
+        selectedDate = uiState.selectedDate,
+        selectedTime = uiState.selectedTime,
+        bookingId = uiState.bookingId,
+        onViewBookings = onViewBookings,
+        onDone = onDone
+    )
+}
+
+@Composable
+fun BookingSuccessScreenContent(
+    provider: Provider?,
+    service: Service?,
+    selectedDate: LocalDate?,
+    selectedTime: LocalTime?,
+    bookingId: String,
+    onViewBookings: () -> Unit,
+    onDone: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
 
     var showAnimation by remember { mutableStateOf(false) }
@@ -88,7 +112,7 @@ fun BookingSuccessScreen(
         label = "check_scale"
     )
 
-    Scaffold { paddingValues ->
+    Scaffold(modifier = modifier) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -143,16 +167,16 @@ fun BookingSuccessScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Booking Details Card
-            uiState.provider?.let { provider ->
-                uiState.service?.let { service ->
+            provider?.let { providerParam ->
+                service?.let { serviceParam ->
                     BookingDetailsCard(
-                        bookingNumber = uiState.bookingId.take(8).uppercase(),
-                        providerName = provider.name,
-                        serviceName = service.name,
-                        date = uiState.selectedDate ?: LocalDate.now(),
-                        time = uiState.selectedTime ?: LocalTime.now(),
-                        address = provider.address,
-                        totalPrice = service.price
+                        bookingNumber = bookingId.take(8).uppercase(),
+                        providerName = providerParam.name,
+                        serviceName = serviceParam.name,
+                        date = selectedDate ?: LocalDate.now(),
+                        time = selectedTime ?: LocalTime.now(),
+                        address = providerParam.address,
+                        totalPrice = serviceParam.price
                     )
                 }
             }
@@ -168,11 +192,11 @@ fun BookingSuccessScreen(
                     onClick = {
                         // Share booking info
                         val shareText = buildString {
-                            append("Booking confirmed!\\n")
-                            append("Service: ${uiState.service?.name}\\n")
-                            append("Date: ${uiState.selectedDate}\\n")
-                            append("Time: ${uiState.selectedTime}\\n")
-                            append("Location: ${uiState.provider?.address}")
+                            append("Booking confirmed!\n")
+                            append("Service: ${service?.name}\n")
+                            append("Date: $selectedDate\n")
+                            append("Time: $selectedTime\n")
+                            append("Location: ${provider?.address}")
                         }
                         val intent = Intent().apply {
                             action = Intent.ACTION_SEND
@@ -334,7 +358,7 @@ private fun BookingDetailsCard(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "$totalPrice",
+                    text = "$$totalPrice",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
@@ -348,35 +372,39 @@ private fun BookingDetailsCard(
 
 @Preview(showBackground = true)
 @Composable
-fun BookingSuccessScreenPreview() {
-    val mockBooking = Booking(
-        id = "abc123def456",
-        userId = "user1",
+fun BookingSuccessScreenContentPreview() {
+    val mockProvider = Provider(
+        id = "provider1",
+        name = "Glamour Hair Studio",
+        description = "Premium hair salon",
+        category = ProviderCategory.SALON,
+        address = "123 Style St, Fashion City",
+        city = "Ciudad de México",
+        rating = 4.5f,
+        reviewCount = 128,
+        phone = "+52 55 1234 5678",
+        workingHours = "9:00 - 20:00",
+        priceRange = "$$"
+    )
+
+    val mockService = Service(
+        id = "service1",
         providerId = "provider1",
-        providerName = "Glamour Hair Studio",
-        providerAddress = "123 Style St, Fashion City",
-        serviceId = "service1",
-        serviceName = "Women's Haircut & Style",
-        date = LocalDate.now().plusDays(3),
-        time = LocalTime.of(14, 30),
-        status = BookingStatus.CONFIRMED,
-        totalPrice = 75.0,
-        notes = null,
-        paymentMethod = dev.pastukhov.booking.domain.model.PaymentMethod.CARD,
-        cardNumber = "4111111111111111",
-        cardExpiry = "12/25",
-        isPaid = true
+        name = "Women's Haircut & Style",
+        description = "Professional haircut and styling",
+        price = 75.0,
+        duration = 60
     )
 
     MaterialTheme {
-        BookingDetailsCard(
-            bookingNumber = mockBooking.id.take(8).uppercase(),
-            providerName = mockBooking.providerName,
-            serviceName = mockBooking.serviceName,
-            date = mockBooking.date,
-            time = mockBooking.time,
-            address = mockBooking.providerAddress,
-            totalPrice = mockBooking.totalPrice
+        BookingSuccessScreenContent(
+            provider = mockProvider,
+            service = mockService,
+            selectedDate = LocalDate.now().plusDays(3),
+            selectedTime = LocalTime.of(14, 30),
+            bookingId = "abc123def456",
+            onViewBookings = {},
+            onDone = {}
         )
     }
 }
