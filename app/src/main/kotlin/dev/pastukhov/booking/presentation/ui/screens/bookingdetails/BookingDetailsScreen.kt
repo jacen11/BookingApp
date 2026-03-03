@@ -44,6 +44,7 @@ import dev.pastukhov.booking.domain.model.Service
 import dev.pastukhov.booking.presentation.model.BookingDetailsData
 import dev.pastukhov.booking.presentation.model.BookingDetailsEvent
 import dev.pastukhov.booking.presentation.ui.components.CancelBookingDialog
+import dev.pastukhov.booking.presentation.ui.components.LoadingIndicator
 import dev.pastukhov.booking.presentation.viewmodel.BookingDetailsViewModel
 import java.time.LocalDate
 import java.time.LocalTime
@@ -115,7 +116,7 @@ fun BookingDetailsScreen(
         ) {
             when {
                 uiState.isLoading -> {
-                    LoadingContent()
+                    LoadingIndicator()
                 }
 
                 uiState.error != null -> {
