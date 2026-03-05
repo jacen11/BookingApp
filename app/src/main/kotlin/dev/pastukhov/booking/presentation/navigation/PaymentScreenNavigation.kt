@@ -1,6 +1,5 @@
 package dev.pastukhov.booking.presentation.navigation
 
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -11,7 +10,6 @@ import dev.pastukhov.booking.presentation.ui.screens.booking.PaymentScreen
 import dev.pastukhov.booking.presentation.viewmodel.PaymentViewModel
 import java.time.LocalDate
 import java.time.LocalTime
-import java.util.UUID
 
 /**
  * Navigation configuration for Payment screen.
@@ -49,9 +47,6 @@ object PaymentScreenNavigation {
             PaymentScreen(
                 onBack = { navController.popBackStack() },
                 onComplete = {
-                    val bookingId = viewModel.state.value.bookingId.ifEmpty {
-                        UUID.randomUUID().toString()
-                    }
                     navController.navigate(
                         Screen.BookingSuccess.createRoute(
                             providerId = providerId,
@@ -63,8 +58,7 @@ object PaymentScreenNavigation {
                     ) {
                         popUpTo(Screen.SelectDateTime.route) { inclusive = true }
                     }
-                },
-                viewModel = viewModel
+                }
             )
         }
     }
