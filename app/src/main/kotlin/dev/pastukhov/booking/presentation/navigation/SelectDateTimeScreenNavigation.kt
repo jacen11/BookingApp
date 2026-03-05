@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import dev.pastukhov.booking.presentation.ui.screens.booking.SelectDateTimeScreen
+import java.time.format.DateTimeFormatter
 
 /**
  * Navigation configuration for Select Date/Time screen.
@@ -31,13 +32,15 @@ object SelectDateTimeScreenNavigation {
                 providerId = providerId,
                 serviceId = serviceId,
                 onBack = { navController.popBackStack() },
-                onNext = {
+                onNext = { date, time ->
+                    val dateString = date.format(DateTimeFormatter.ISO_LOCAL_DATE)
+                    val timeString = time.format(DateTimeFormatter.ofPattern("HH:mm"))
                     navController.navigate(
                         Screen.ConfirmBooking.createRoute(
                             providerId = providerId,
                             serviceId = serviceId,
-                            date = "",
-                            time = ""
+                            date = dateString,
+                            time = timeString
                         )
                     )
                 }

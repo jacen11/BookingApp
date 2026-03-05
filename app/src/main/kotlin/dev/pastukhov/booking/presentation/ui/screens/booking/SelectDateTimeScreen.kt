@@ -59,7 +59,7 @@ fun SelectDateTimeScreen(
     providerId: String,
     serviceId: String,
     onBack: () -> Unit,
-    onNext: () -> Unit,
+    onNext: (date: LocalDate, time: LocalTime) -> Unit,
     viewModel: SelectDateTimeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsState()
@@ -75,12 +75,14 @@ fun SelectDateTimeScreen(
         showDatePicker = showDatePicker,
         onShowDatePickerChange = { showDatePicker = it },
         onBack = onBack,
-        onNext = onNext,
         onDateSelected = { viewModel.handleEvent(SelectDateTimeEvent.SelectDate(it)) },
         onTimeSelected = { viewModel.handleEvent(SelectDateTimeEvent.SelectTime(it)) },
         onProceed = {
-            if (uiState.canProceed) {
-                onNext()
+            if (uiState.canProceed
+                && uiState.selectedDate != null
+                && uiState.selectedTime != null
+            ) {
+                onNext(uiState.selectedDate!!, uiState.selectedTime!!)
             }
         }
     )
@@ -93,7 +95,6 @@ private fun SelectDateTimeScreenContent(
     showDatePicker: Boolean,
     onShowDatePickerChange: (Boolean) -> Unit,
     onBack: () -> Unit,
-    onNext: () -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onTimeSelected: (LocalTime) -> Unit,
     onProceed: () -> Unit
@@ -247,7 +248,6 @@ fun SelectDateTimeScreenPreview() {
         showDatePicker = false,
         onShowDatePickerChange = {},
         onBack = {},
-        onNext = {},
         onDateSelected = {},
         onTimeSelected = {},
         onProceed = {}
