@@ -45,7 +45,7 @@ import dev.pastukhov.booking.presentation.viewmodel.PaymentViewModel
 @Composable
 fun PaymentScreen(
     onBack: () -> Unit,
-    onComplete: () -> Unit
+    onComplete: (String) -> Unit
 ) {
     val viewModel: PaymentViewModel = hiltViewModel()
     val uiState by viewModel.state.collectAsState()
@@ -66,7 +66,9 @@ fun PaymentScreen(
             viewModel.handleEvent(PaymentEvent.UpdateCardCvv(cvv))
         },
         onPay = {
-            viewModel.completeBooking { onComplete() }
+            viewModel.completeBooking { bookingId ->
+                onComplete(bookingId)
+            }
         }
     )
 }

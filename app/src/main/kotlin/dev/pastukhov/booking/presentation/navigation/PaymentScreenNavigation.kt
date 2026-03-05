@@ -11,6 +11,7 @@ import dev.pastukhov.booking.presentation.ui.screens.booking.PaymentScreen
 import dev.pastukhov.booking.presentation.viewmodel.PaymentViewModel
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 /**
  * Navigation configuration for Payment screen.
@@ -33,28 +34,47 @@ object PaymentScreenNavigation {
                 backStackEntry.arguments?.getString("providerId") ?: return@composable
             val serviceId =
                 backStackEntry.arguments?.getString("serviceId") ?: return@composable
-            val date = backStackEntry.arguments?.getString("date") ?: return@composable
-            val time = backStackEntry.arguments?.getString("time") ?: return@composable
-            val bookingId = backStackEntry.arguments?.getString("bookingId") ?: return@composable
+            val dateString = backStackEntry.arguments?.getString("date") ?: ""
+            val timeString = backStackEntry.arguments?.getString("time") ?: ""
+
+            // Validate that date and time are not empty
+            if (dateString.isBlank() || timeString.isBlank()) {
+                navController.popBackStack()
+                return@composable
+            }
+
+            val date = try {
+                LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE)
+            } catch (e: Exception) {
+                navController.popBackStack()
+                return@composable
+            }
+
+            val time = try {
+                LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"))
+            } catch (e: Exception) {
+                navController.popBackStack()
+                return@composable
+            }
 
             val viewModel: PaymentViewModel = hiltViewModel()
             viewModel.handleEvent(
                 PaymentEvent.InitializePayment(
                     providerId = providerId,
                     serviceId = serviceId,
-                    date = LocalDate.parse(date),
-                    time = LocalTime.parse(time)
+                    date = date,
+                    time = time
                 )
             )
             PaymentScreen(
                 onBack = { navController.popBackStack() },
-                onComplete = {
+                onComplete = { bookingId ->
                     navController.navigate(
                         Screen.BookingSuccess.createRoute(
                             providerId = providerId,
                             serviceId = serviceId,
-                            date = date,
-                            time = time,
+                            date = dateString,
+                            time = timeString,
                             bookingId = bookingId
                         )
                     ) {

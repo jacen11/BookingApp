@@ -119,7 +119,7 @@ class PaymentViewModel @Inject constructor(
     /**
      * Complete the booking and save to database.
      */
-    fun completeBooking(onSuccess: () -> Unit) {
+    fun completeBooking(onSuccess: (String) -> Unit) {
         launchWithErrorHandling(
             onError = { throwable ->
                 updateState { copy(isLoading = false, error = "Failed to save booking: ${throwable.message}") }
@@ -164,7 +164,7 @@ class PaymentViewModel @Inject constructor(
                 )
             }
 
-            onSuccess()
+            onSuccess(booking.id)
         }
     }
 
