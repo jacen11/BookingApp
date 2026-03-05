@@ -14,16 +14,15 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,11 +33,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.pastukhov.booking.R
-import dev.pastukhov.booking.data.repository.UserSettingsRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import dev.pastukhov.booking.presentation.model.LoginEvent
+import dev.pastukhov.booking.presentation.viewmodel.LoginViewModel
 
 /**
  * Login screen for user authentication.
@@ -47,12 +46,15 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     modifier: Modifier = Modifier,
     onLoginSuccess: () -> Unit,
-    userSettingsRepository: UserSettingsRepository? = null,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    val scope = CoroutineScope(Dispatchers.IO)
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(state.isLoginSuccessful) {
+        if (state.isLoginSuccessful) {
+            onLoginSuccess()
+        }
+    }
 
     Column(
         modifier = modifier
@@ -81,8 +83,8 @@ fun LoginScreen(
 
         // Email field
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
+            value = state.email,
+            onValueChange = { viewModel.handleEvent(LoginEvent.OnEmailChanged(it)) },
             label = { Text(stringResource(R.string.email)) },
             leadingIcon = {
                 Icon(
@@ -102,8 +104,8 @@ fun LoginScreen(
 
         // Password field
         OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
+            value = state.password,
+            onValueChange = { viewModel.handleEvent(LoginEvent.OnPasswordChanged(it)) },
             label = { Text(stringResource(R.string.phone)) },
             leadingIcon = {
                 Icon(
@@ -112,15 +114,15 @@ fun LoginScreen(
                 )
             },
             trailingIcon = {
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                IconButton(onClick = { viewModel.handleEvent(LoginEvent.OnTogglePasswordVisibility) }) {
                     Icon(
-                        imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                        contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                        imageVector = if (state.isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        contentDescription = if (state.isPasswordVisible) "Hide password" else "Show password"
                     )
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if (state.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
@@ -128,32 +130,37 @@ fun LoginScreen(
             singleLine = true
         )
 
+        // Error message
+        state.error?.let { error ->
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = error,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+
         Spacer(modifier = Modifier.height(32.dp))
 
         // Login button
         Button(
-            onClick = {
-                //todo transfer to viewModel
-                // Save auth token for persistent login
-                userSettingsRepository?.let { repository ->
-                    scope.launch {
-                        // Generate mock token and save to DataStore
-                        repository.saveAuthToken(
-                            token = "mock_token_${System.currentTimeMillis()}",
-                            userId = email.ifEmpty { "user_1" }
-                        )
-                    }
-                }
-                onLoginSuccess()
-            },
+            onClick = { viewModel.handleEvent(LoginEvent.OnLoginClick) },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp)
+                .height(56.dp),
+            enabled = !state.isLoading
         ) {
-            Text(
-                text = stringResource(R.string.login),
-                style = MaterialTheme.typography.titleMedium
-            )
+            if (state.isLoading) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.height(24.dp)
+                )
+            } else {
+                Text(
+                    text = stringResource(R.string.login),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
         }
     }
 }

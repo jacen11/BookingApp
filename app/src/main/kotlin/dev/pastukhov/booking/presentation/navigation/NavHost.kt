@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
-import dev.pastukhov.booking.data.repository.UserSettingsRepository
 
 /**
  * Main Navigation Host for the app.
@@ -19,7 +18,6 @@ import dev.pastukhov.booking.data.repository.UserSettingsRepository
 fun BookingNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    userSettingsRepository: UserSettingsRepository,
     startDestination: String = Screen.Splash.route
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -52,7 +50,7 @@ fun BookingNavHost(
             SplashScreenNavigation.run { createNavGraph(navController) }
 
             // Login Screen
-            LoginScreenNavigation.run { createNavGraph(navController, userSettingsRepository) }
+            LoginScreenNavigation.run { createNavGraph(navController) }
 
             // Home Screen
             HomeScreenNavigation.run { createNavGraph(navController) }

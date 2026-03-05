@@ -28,7 +28,7 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    
+
     @Inject
     lateinit var settingsRepository: UserSettingsRepository
     
@@ -60,7 +60,6 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     BookingNavHost(
                         navController = navController,
-                        userSettingsRepository = settingsRepository
                     )
                 }
             }
