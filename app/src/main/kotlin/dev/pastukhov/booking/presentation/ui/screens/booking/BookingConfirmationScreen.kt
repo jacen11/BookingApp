@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import dev.pastukhov.booking.R
+import dev.pastukhov.booking.presentation.viewmodel.BookingConfirmationViewModel
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -51,9 +52,9 @@ fun BookingConfirmationScreen(
     providerId: String,
     serviceId: String,
     onBack: () -> Unit,
-    onNext: () -> Unit,
-    viewModel: BookingConfirmationViewModel = hiltViewModel()
+    onNext: () -> Unit
 ) {
+    val viewModel: BookingConfirmationViewModel = hiltViewModel()
     val uiState by viewModel.state.collectAsState()
 
     Scaffold(

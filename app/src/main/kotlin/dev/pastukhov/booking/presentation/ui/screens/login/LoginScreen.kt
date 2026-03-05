@@ -46,7 +46,7 @@ import dev.pastukhov.booking.presentation.viewmodel.LoginViewModel
 fun LoginScreen(
     modifier: Modifier = Modifier,
     onLoginSuccess: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: LoginViewModel
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -173,7 +173,8 @@ fun LoginScreen(
 fun LoginScreenPreview() {
     MaterialTheme {
         LoginScreen(
-            onLoginSuccess = {}
+            onLoginSuccess = {},
+            viewModel = hiltViewModel()
         )
     }
 }

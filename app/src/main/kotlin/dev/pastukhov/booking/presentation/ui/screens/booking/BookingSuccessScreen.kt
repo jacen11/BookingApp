@@ -70,9 +70,9 @@ import java.time.format.FormatStyle
 fun BookingSuccessScreen(
     onViewBookings: () -> Unit,
     onViewDetails: (String) -> Unit,
-    onDone: () -> Unit,
-    viewModel: BookingSuccessViewModel = hiltViewModel()
+    onDone: () -> Unit
 ) {
+    val viewModel: BookingSuccessViewModel = hiltViewModel()
     val uiState by viewModel.state.collectAsState()
 
     BookingSuccessScreenContent(
