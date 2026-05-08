@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/awsToolkit.xml
+/.idea/amazonq.xml
